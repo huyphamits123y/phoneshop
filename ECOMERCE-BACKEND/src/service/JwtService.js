@@ -1,4 +1,6 @@
+// jwt service
 const jwt = require('jsonwebtoken')
+
 require('dotenv').config()
 const generalAccessToken = (payload) => {
     console.log('payload', payload)
