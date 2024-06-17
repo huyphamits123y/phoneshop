@@ -5,7 +5,10 @@ import { StyleNameProduct, WrapperCardStyle, WrapperDiscountText, WrapperPriceTe
 import imageProduct from '../../assets/images/image1.png';
 import { StarFilled } from '@ant-design/icons'
 import logo from '../../assets/images/logo.png'
-const CardComponent = () => {
+const CardComponent = (props) => {
+
+    const { countInStock, description, image, name, price, rating, type, discount, selled } = props
+
 
 
 
@@ -23,21 +26,21 @@ const CardComponent = () => {
 
             <img src={logo}
                 style={{ width: '68px', height: '14px', position: 'absolute', top: -1, left: 0, borderTopLeftRadius: '3px' }} />
-            <StyleNameProduct>Iphone</StyleNameProduct>
+            <StyleNameProduct>{name}</StyleNameProduct>
 
             <WrapperReporText>
                 <span style={{ marginRight: '4px' }}>
-                    <span>4.96</span> <StarFilled style={{ fontSize: '12px', color: 'yellow' }} />
+                    <span>{rating}</span> <StarFilled style={{ fontSize: '12px', color: 'yellow' }} />
                 </span>
 
-                <WrapperStyleTextSell>| Da ban 1000+</WrapperStyleTextSell>
+                <WrapperStyleTextSell>| Da ban {selled || 1000}</WrapperStyleTextSell>
 
 
             </WrapperReporText>
             <WrapperPriceText>
-                <span style={{ marginRight: '8px' }}>1.000.000d</span>
+                <span style={{ marginRight: '8px' }}>{price}</span>
                 <WrapperDiscountText>
-                    -5%
+                    {discount || 5} %
                 </WrapperDiscountText>
 
             </WrapperPriceText>

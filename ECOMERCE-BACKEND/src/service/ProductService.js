@@ -152,53 +152,92 @@ const deleteProduct = (id) => {
         }
     })
 }
-const getAllProduct = (limit, page, sort, filter) => {
+// const getAllProduct = (limit, page, sort, filter) => {
+
+//     return new Promise(async (resolve, reject) => {
+
+//         // sort sap xep
+//         // filter lọc dữ liệu có những ký tự giống với query truyền vào tùy vào người dùng muốn lọc dựa trên nội dung nào
+//         try {
+//             console.log('sort', sort);
+//             const totalProduct = await Product.countDocuments();
+//             console.log('filter', filter);
+//             if (filter) {
+//                 const label = filter[0];
+//                 console.log('label', label)
+//                 const allObjectFilter = await Product.find({
+//                     [label]: { '$regex': filter[1] }
+//                 }).limit(limit).skip(page * limit)
+//                 resolve({
+//                     status: 'OK',
+//                     message: 'SUCCESS',
+//                     data: allObjectFilter,
+//                     total: totalProduct,
+//                     pageCurrent: Number(page + 1),
+//                     totalPage: Math.ceil(totalProduct / limit),
+
+//                 })
+//             }
+
+//             if (sort) {
+//                 console.log('okok')
+//                 const objectSort = {}
+//                 objectSort[sort[1]] = sort[0]
+//                 const getAllsProductSort = await Product.find().limit(limit).skip(page * limit).sort(objectSort)
+//                 resolve({
+//                     status: 'OK',
+//                     message: 'GET ALL PRODUCT',
+//                     data: getAllsProductSort,
+//                     total: totalProduct,
+//                     pageCurrent: Number(page + 1),
+//                     totalPage: Math.ceil(totalProduct / limit),
+
+//                 })
+//                 console.log('objectSort', objectSort)
+
+//             }
+//             const getAllsProduct = await Product.find().limit(limit).skip(page * limit).sort({
+//                 name: sort
+//             })
+
+//             // limit số lượng sản phẩm giới hạn
+//             // skip bỏ qua bao nhiêu sản phẩm
+
+
+
+
+
+
+
+//         } catch (e) {
+//             reject(e)
+//             console.log('not success')
+//         }
+//     })
+// }
+const getAllProduct = () => {
 
     return new Promise(async (resolve, reject) => {
 
         // sort sap xep
         // filter lọc dữ liệu có những ký tự giống với query truyền vào tùy vào người dùng muốn lọc dựa trên nội dung nào
         try {
-            console.log('sort', sort);
+
             const totalProduct = await Product.countDocuments();
-            console.log('filter', filter);
-            if (filter) {
-                const label = filter[0];
-                console.log('label', label)
-                const allObjectFilter = await Product.find({
-                    [label]: { '$regex': filter[1] }
-                }).limit(limit).skip(page * limit)
-                resolve({
-                    status: 'OK',
-                    message: 'SUCCESS',
-                    data: allObjectFilter,
-                    total: totalProduct,
-                    pageCurrent: Number(page + 1),
-                    totalPage: Math.ceil(totalProduct / limit),
+            const getAllsProduct = await Product.find();
 
-                })
-            }
 
-            if (sort) {
-                console.log('okok')
-                const objectSort = {}
-                objectSort[sort[1]] = sort[0]
-                const getAllsProductSort = await Product.find().limit(limit).skip(page * limit).sort(objectSort)
-                resolve({
-                    status: 'OK',
-                    message: 'GET ALL PRODUCT',
-                    data: getAllsProductSort,
-                    total: totalProduct,
-                    pageCurrent: Number(page + 1),
-                    totalPage: Math.ceil(totalProduct / limit),
+            resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+                data: getAllsProduct,
+                total: totalProduct,
 
-                })
-                console.log('objectSort', objectSort)
 
-            }
-            const getAllsProduct = await Product.find().limit(limit).skip(page * limit).sort({
-                name: sort
             })
+
+
+
 
             // limit số lượng sản phẩm giới hạn
             // skip bỏ qua bao nhiêu sản phẩm

@@ -54,6 +54,7 @@ const authUserMiddleWare = (req, res, next) => {
 
 
 }
+
 const authUserMiddleWare1 = (req, res, next) => {
 
     const token = req.headers.token.split(' ')[1]

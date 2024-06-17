@@ -70,8 +70,9 @@ const loginUser = async (req, res) => {
         const { refresh_token, ...newRespone } = response
         // console.log('response', response)
         res.cookie('refresh_token', refresh_token, {
-            HttpOnly: true,
-            Secure: true,
+            httpOnly: true,
+            secure: false,
+            samsite: 'strict'
         })
 
 
@@ -158,6 +159,7 @@ const getDetailsUser = async (req, res) => {
                 message: 'The userId is required'
             })
         }
+       
         console.log('userId', userId);
         console.log('token', token);
 
@@ -177,7 +179,12 @@ const refreshtoken = async (req, res) => {
 
     // console.log('req.cookies', req.cookie);
 
-    console.log('req.cookies', req.cookies);
+
+
+
+
+
+    console.log('req.cookie.refreh_token', req.cookies.refresh_token);
     try {
         const token = req.cookies.refresh_token
 
@@ -198,6 +205,27 @@ const refreshtoken = async (req, res) => {
         })
     }
 }
+const logoutUser = async (req, res) => {
+
+
+    try {
+        console.log("logout")
+        res.clearCookie('access_token')
+        res.clearCookie('access_token')
+        res.clearCookie('refresh_token')
+        return res.status(200).json({
+            status: 'OK',
+            message: 'logout successfully'
+        })
+
+
+
+    } catch (e) {
+        return res.status(400).json({
+            message: e
+        })
+    }
+}
 module.exports = {
     createUser,
     loginUser,
@@ -205,5 +233,54 @@ module.exports = {
     deleteUser,
     getAllUser,
     getDetailsUser,
-    refreshtoken
+    refreshtoken,
+    logoutUser
 }
+
+
+
+
+// import { createContext, useEffect, useState } from "react";
+// import axios from 'axios';
+
+// export const UserContext = createContext({});
+
+// export function UserContextProvider({ children }) {
+//     const [user, setUser] = useState(null);
+//     const [ready, setReady] = useState(false);
+
+//     useEffect(() => {
+//         const storedUser = localStorage.getItem('user');
+//         if (storedUser) {
+//             setUser(JSON.parse(storedUser));
+//             setReady(true);
+//         } else {
+//             axios.get('http://localhost:5000/api/profile').then(({ data }) => {
+//                 setUser(data);
+//                 localStorage.setItem('user', JSON.stringify(data));
+//                 setReady(true);
+//             }).catch(() => {
+//                 setReady(true);
+//             });
+//         }
+
+
+//     }, []);
+
+//     const updateUser = (userData) => {
+//         setUser(userData);
+//         localStorage.setItem('user', JSON.stringify(userData));
+//     };
+
+//     const clearUser = () => {
+//         setUser(null);
+//         localStorage.removeItem('user');
+//     };
+    
+
+//     return (
+//         <UserContext.Provider value={{ user, setUser: updateUser, clearUser, ready }}>
+//             {children}
+//         </UserContext.Provider>
+//     );
+// }

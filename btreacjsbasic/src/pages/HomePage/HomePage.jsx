@@ -8,6 +8,8 @@ import slider3 from '../../assets/images/slider3.png';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import CardComponent from '../../components/CardComponent/CardComponent';
 import NavbarComponent from '../../components/NavbarComponent/NavbarComponent';
+import { useQuery } from '@tanstack/react-query';
+import * as ProductService from '../../services/ProductService'
 const HomePage = () => {
     const arr = ['TV', ' TU LANH', 'LAPTOP']
     const arrImages = [
@@ -15,6 +17,23 @@ const HomePage = () => {
         { src: slider2 },
         { src: slider3 }
     ];
+    const fetchProductAll = async () => {
+        const res = await ProductService.getAllProduct()
+        console.log('resss', res)
+        return res;
+    }
+    // const { isLoading, data: products } = useQuery(['products'], fetchProductAll, { retry: 3, retryDelay: 1000 })
+    // const { isLoading, data } = useQuery({
+    //     queryKey: ['products'],
+    //     queryFn: fetchProductAll,
+    // });
+    const { isLoading, data: products, error } = useQuery({
+        queryKey: ['products'],
+        queryFn: fetchProductAll,
+        retry: 3,
+        retryDelay: 1000,
+    });
+    console.log("datas", products)
 
     return (
         <>
@@ -37,14 +56,23 @@ const HomePage = () => {
                     <SliderComponent arrImages={arrImages}></SliderComponent>
 
                     <WrapperProducts>
-                        <CardComponent />
-                        <CardComponent />
+                        {products?.data?.map((product) => {
+                            return (
+                                <CardComponent key={product._id}
+                                    countInStock={product.countInStock}
+                                    description={product.description}
+                                    image={product.image}
+                                    name={product.name}
+                                    price={product.price}
+                                    rating={product.rating}
+                                    type={product.type}
+                                    selled={product.selled}
+                                    discount={product.discount}
+                                />
+                            )
 
-                        <CardComponent />
+                        })}
 
-                        <CardComponent />
-
-                        <CardComponent />
 
 
                     </WrapperProducts>

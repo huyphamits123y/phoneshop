@@ -4,10 +4,11 @@ import InputForm from "../../components/InputForm/InputForm";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import imageLogo from '../../assets/images/image2.png';
 import { Row, Col, Image, InputNumber, Divider } from 'antd';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from "react";
 import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons'
 import { useNavigate } from "react-router";
-import { useMutation } from "@tanstack/react-query";
+import { Alert, Button, Input } from 'antd';
 import * as UserService from '../../services/UserService';
 import { useMutationHooks } from "../../hooks/useMutationHook";
 import Pending from "../../components/LoadingComponent/Pending";
@@ -17,41 +18,57 @@ import { jwtDecode } from "jwt-decode";
 import { useDispatch } from 'react-redux'
 import { updateUser } from "../../redux/slides/userSlide";
 
+
 const SignInpage = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+
+    const [errorMessage, setErrorMessage] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
+    const [showMessage, setShowMessage] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [isPending, setIsPending] = useState(false);
     const mutation = useMutationHooks(
         data => UserService.loginUser(data)
+
     )
     console.log('mutation', mutation)
     const handleNavigateSignUp = () => {
         navigate('/sign-up')
 
     }
-    const { data, isLoading, isSuccess } = mutation;
+    const { data, isLoading, isSuccess, isError } = mutation;
     useEffect(() => {
         if (isSuccess) {
             navigate('/')
             console.log('data', data)
-            localStorage.setItem('acess_token', data?.access_token)
+            localStorage.setItem('access_token', JSON.stringify(data?.access_token))
 
             if (data?.access_token) {
                 const decoded = jwtDecode(data?.access_token)
                 console.log('decoded', decoded)
                 if (decoded?.id) {
-                    handleGetDetailsUser(decoded?.id, data?.access_token)
+                    handleGetDetailsUser(decoded?.id, data?.access_token);
+                    console.log(decoded?.id);
+                    console.log(decoded?.access_token)
 
 
                 }
             }
+        } else if (isError) {
+            navigate('/sign-in')
+            setErrorMessage('Tài khoản hoặc mật khẩu không chính xác');
+            setShowAlert(true);
+            setShowMessage(true); // 
+
         }
-    }, [isSuccess])
+    }, [isSuccess, isError])
     const handleGetDetailsUser = async (id, token) => {
         const res = await UserService.getDetailsUser(id, token)
+        console.log("iddddd", id)
+        console.log("tokenddd", token)
         dispatch(updateUser({ ...res?.data, access_token: token }))
         console.log('res', res)
     }
@@ -83,6 +100,7 @@ const SignInpage = () => {
                 <WrapprerContainerLeft>
                     <h1>Xin chao</h1>
                     <p>Dang nhap vao tai khoan</p>
+
                     <InputForm style={{ marginBottom: '10px' }} placeholder="abc@gmail.com" value={email} onChange={handleOnchangeEmail} />
                     <div style={{ position: 'relative' }}>
                         <span
@@ -107,6 +125,8 @@ const SignInpage = () => {
                         <InputForm placeholder="password" type={isShowPassword ? "text" : "password"} value={password} onChange={handleOnchangePassword} />
 
                     </div>
+                    {showAlert && <Alert message={errorMessage} type="error" closable onClose={() => setShowAlert(false)} style={{ marginTop: '10px' }} />}
+
 
                     <div style={{ marginTop: '10px', marginBottom: '10px' }}>
                         {data?.status === 'EER' && <span style={{ color: 'red' }}>{data?.message}</span>}
@@ -140,7 +160,13 @@ const SignInpage = () => {
                     <h4 style={{ textAlign: 'center' }}>Mua sam tai HUYPHAM</h4>
                 </WrapprerContainerRight>
             </div>
+
         </div>
     )
 }
 export default SignInpage
+
+
+
+
+

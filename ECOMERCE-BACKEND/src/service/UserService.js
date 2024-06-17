@@ -58,6 +58,8 @@ const loginUser = (userLogin) => {
                     message: 'Email khong ton tai'
                 })
             }
+            console.log('password', password);
+            console.log('check pass', checkUser.password)
             const comparePassword = bcrypt.compareSync(password, checkUser.password);
 
             console.log('comparePassword', comparePassword)
@@ -129,7 +131,12 @@ const updateUser = (id, data) => {
             }
             const updatedUser = await User.findByIdAndUpdate(id, data, { new: true });
             console.log('updatedUser thanh cong', updatedUser);
-
+            if (data.password) {
+                const hash = bcrypt.hashSync(data.password, 10);
+                updatedUser.password = hash;
+                await updatedUser.save(); // Lưu user với mật khẩu đã băm
+                console.log('hashed password:', hash);
+            }
 
             resolve({
                 status: 'OK',
