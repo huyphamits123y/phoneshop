@@ -30,6 +30,7 @@ function App() {
       handleGetDetailsUser(decoded?.id, storageData)
 
     }
+    setIsLoading(false)
 
 
   }, [])
@@ -69,7 +70,7 @@ function App() {
     const res = await UserService.getDetailsUser(id, token)
     dispatch(updateUser({ ...res?.data, access_token: token }))
     console.log('res', res)
-    setIsLoading(false)
+
   }
   // useEffect(() => {
   //   fetchApi()
@@ -95,7 +96,7 @@ function App() {
               const isCheckAuth = !route.isPrivate || user.isAdmin
               const Layout = route.isShowHeader ? DefaultComponent : Fragment
               return (
-                <Route key={route.path} path={route.path} element={
+                <Route key={route.path} path={isCheckAuth ? route.path : undefined} element={
                   <Layout>
                     <Page />
                   </Layout>

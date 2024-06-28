@@ -12,45 +12,53 @@ export const routes = [
     {
         path: '/',
         page: HomePage,
-        isShowHeader: true
+        isShowHeader: true,
+
     },
     {
         path: '/order',
         page: OrderPage,
-        isShowHeader: true
+        isShowHeader: true,
+
     },
     {
         path: '/product',
         page: ProductsPage,
-        isShowHeader: true
+        isShowHeader: true,
+
     },
     {
         path: '/type',
         page: TypeProductPage,
-        isShowHeader: true
+        isShowHeader: true,
+
     },
     {
         path: '/sign-in',
         page: SignInPage,
-        isShowHeader: false
+        isShowHeader: false,
+
     },
     {
         path: '/sign-up',
         page: SignUpPage,
-        isShowHeader: false
+        isShowHeader: false,
+
     },
     {
         path: '/product-details',
         page: ProductDetailsPage,
-        isShowHeader: true
+        isShowHeader: true,
+
     },
     {
         path: '/profile-user',
         page: ProfilePage,
-        isShowHeader: true
+        isShowHeader: true,
+
     },
     {
-        path: '/system-admin',
+        path: '/system/admin',
         page: AdminPage,
         isShowHeader: false,
         isPrivate: true,

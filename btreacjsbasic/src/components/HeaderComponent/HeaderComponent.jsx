@@ -12,7 +12,7 @@ import { useState } from "react";
 const Loading = ({ isLoading, children }) => (
     isLoading ? <div>Loading...</div> : <>{children}</>
 );
-const HeaderComponent = () => {
+const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
     const navigate = useNavigate();
     const [userName, setUserName] = useState('');
     const [userAvatar, setUserAvatar] = useState('');
@@ -45,26 +45,33 @@ const HeaderComponent = () => {
         <div>
             <WrapperContentPopup onClick={handleLogout}>Dang Xuat</WrapperContentPopup>
             <WrapperContentPopup onClick={() => navigate('/profile-user')}>Thong tin nguoi dung</WrapperContentPopup>
+            {user?.isAdmin && (
+                <WrapperContentPopup onClick={() => navigate('/system/admin')}>Quan li he thong</WrapperContentPopup>
+
+            )}
+
         </div>
 
     );
     return (
         <div style={{ width: '100%', background: 'rgb(26,148,255)', display: 'flex', justifyContent: 'center' }}>
-            <WrapperHeader>
+            <WrapperHeader style={{ justifyContent: isHiddenSearch && isHiddenSearch ? 'space-between' : 'unset' }}>
                 <Col span={5}>
                     <WrapperTextHeader> HUYPHAM</WrapperTextHeader>
                 </Col>
-                <Col span={13}>
-                    <ButtonInputSearch
-                        size="large"
-                        textButton="Tim kiem"
-                        placeholder="input search text"
-                        bordered={false}
+                {!isHiddenSearch && (
+                    <Col span={13}>
+                        <ButtonInputSearch
+                            size="large"
+                            textButton="Tim kiem"
+                            placeholder="input search text"
+                            bordered={false}
 
 
 
-                    />
-                </Col>
+                        />
+                    </Col>
+                )}
                 <Col span={6} style={{ display: 'flex', gap: '54px', alignItems: 'center' }}>
                     <Loading isLoading={loading}>
                         <WrapperHeaderAccount>
@@ -109,12 +116,14 @@ const HeaderComponent = () => {
 
                     </Loading>
 
-                    <div style={{ marginLeft: '100px' }}>
-                        <Badge count={4} size="small">
-                            <ShoppingCartOutlined style={{ fontSize: '30px', color: '#fff' }} />
-                        </Badge>
-                        <WrapperTextHeaderSmall>Cart</WrapperTextHeaderSmall>
-                    </div>
+                    {!isHiddenCart && (
+                        <div style={{ marginLeft: '100px' }}>
+                            <Badge count={4} size="small">
+                                <ShoppingCartOutlined style={{ fontSize: '30px', color: '#fff' }} />
+                            </Badge>
+                            <WrapperTextHeaderSmall>Cart</WrapperTextHeaderSmall>
+                        </div>
+                    )}
                 </Col>
             </WrapperHeader>
         </div>

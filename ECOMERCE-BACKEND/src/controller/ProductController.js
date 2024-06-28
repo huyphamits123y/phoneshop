@@ -4,7 +4,8 @@ const JwtService = require('../service/JwtService')
 const createProduct = async (req, res) => {
     try {
         const { name, image, type, price, countInStock, rating, description } = req.body;
-        if (!name || !image || !type || !price || !countInStock || !rating) {
+        console.log('check', req.body)
+        if (!name || !image || !type || !price || !countInStock || !rating || !description) {
             return res.status(400).json({
                 status: 'ERR',
                 message: 'The input is required'
@@ -23,6 +24,34 @@ const createProduct = async (req, res) => {
     // return res.send("data success");
 
 }
+// const createProduct = async (req, res) => {
+//     try {
+//         const { name, image, type, price, countInStock, rating, description } = req.body;
+//         console.log('check', req.body)
+//         if (!name || !image || !type || !price || !countInStock || !rating || !description) {
+//             return res.status(400).json({
+//                 status: 'ERR',
+//                 message: 'The input is required'
+//             })
+//         }
+//         console.log('vvvv')
+//         return res.status(200).json({
+//             status: 'success',
+//             message: 'success'
+//         })
+
+//         // const response = await ProductService.createProduct(req.body);
+//         // return res.status(200).json(response)
+
+//     } catch (e) {
+//         return res.status(404).json({
+//             message: e
+//         })
+//     }
+//     // console.log(req.body);
+//     // return res.send("data success");
+
+// }
 const updateProduct = async (req, res) => {
     try {
         const productId = req.params.id;

@@ -65,10 +65,14 @@ const loginUser = (userLogin) => {
             console.log('comparePassword', comparePassword)
 
             if (!comparePassword) {
-                resolve({
-                    status: 'OK',
+                // resolve({
+                //     status: 'OK',
+                //     message: 'The password or user is incorrect'
+                // })
+                return reject({
+                    status: 'ERROR',
                     message: 'The password or user is incorrect'
-                })
+                });
             }
             const access_token = await generalAccessToken({
                 id: checkUser.id,
