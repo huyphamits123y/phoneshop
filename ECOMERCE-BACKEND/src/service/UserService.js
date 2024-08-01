@@ -54,7 +54,7 @@ const loginUser = (userLogin) => {
             })
             if (checkUser === null) {
                 resolve({
-                    status: 'OK',
+                    status: 'ERROR',
                     message: 'Email khong ton tai'
                 })
             }

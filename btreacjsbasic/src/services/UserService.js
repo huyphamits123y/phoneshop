@@ -45,6 +45,21 @@ export const getDetailsUser = async (id, access_token) => {
         throw error; // Hoặc xử lý lỗi theo cách khác tùy thuộc vào yêu cầu của bạn
     }
 };
+export const getAllUser = async (access_token) => {
+    try {
+        const res = await axiosJWT.get('/api/user/getAll', {
+            headers: {
+                token: `Bearer ${access_token}`,
+
+            }
+
+        })
+        return res.data;
+    } catch (error) {
+        // console.error('Error logging in user:', error);
+        throw error; // Hoặc xử lý lỗi theo cách khác tùy thuộc vào yêu cầu của bạn
+    }
+};
 // export const refreshToken = async () => {
 //     const res = await axios.post('http://localhost:3001/api/user/refresh-token', {
 //         withCredentials: true
@@ -81,3 +96,12 @@ export const updateUser = async (id, data, access_token) => {
 //     return res.data;
 
 // };
+export const deleteUser = async (id, access_token) => {
+    const res = await axiosJWT.delete(`/api/user/delete-user/${id}`, {
+        headers: {
+            token: `Bearer ${access_token}`,
+
+        }
+    })
+    return res.data
+}

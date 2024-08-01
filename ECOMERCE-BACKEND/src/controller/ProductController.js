@@ -73,6 +73,17 @@ const updateProduct = async (req, res) => {
     // return res.send("data success");
 
 }
+const getAllType = async (req, res) => {
+    try {
+        const respone = await ProductService.getAllType()
+        return res.status(200).json(respone)
+    } catch (e) {
+        return res.status(400).json({
+            message: e
+        })
+    }
+
+}
 const detailsProduct = async (req, res) => {
     try {
         const productId = req.params.id;
@@ -121,8 +132,23 @@ const deleteProduct = async (req, res) => {
 const getAllProduct = async (req, res) => {
     try {
 
+        // const { limit, page, sort, filter } = req.query;
+        const response = await ProductService.getAllProduct();
+        return res.status(200).json(response)
+
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+
+
+}
+const getAllProductSearch = async (req, res) => {
+    try {
+
         const { limit, page, sort, filter } = req.query;
-        const response = await ProductService.getAllProduct(Number(limit) || 3, Number(page) || 0, sort, filter);
+        const response = await ProductService.getAllProductSearch(Number(limit) || 3, Number(page) || 0, sort, filter);
         return res.status(200).json(response)
 
     } catch (e) {
@@ -138,6 +164,8 @@ module.exports = {
     updateProduct,
     detailsProduct,
     deleteProduct,
-    getAllProduct
+    getAllProduct,
+    getAllProductSearch,
+    getAllType
 
 }

@@ -7,7 +7,7 @@ import { Row, Col, Image, InputNumber, Divider } from 'antd';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from "react";
 import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons'
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { Alert, Button, Input } from 'antd';
 import * as UserService from '../../services/UserService';
 import { useMutationHooks } from "../../hooks/useMutationHook";
@@ -21,6 +21,7 @@ import { updateUser } from "../../redux/slides/userSlide";
 
 const SignInpage = () => {
     const [email, setEmail] = useState('')
+    const location = useLocation()
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -30,19 +31,42 @@ const SignInpage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [isPending, setIsPending] = useState(false);
-    const mutation = useMutationHooks(
-        data => UserService.loginUser(data)
 
-    )
-    console.log('mutation', mutation)
     const handleNavigateSignUp = () => {
         navigate('/sign-up')
 
     }
+    // const mutation = useMutationHooks(
+    //     data => UserService.loginUser(data)
+
+
+    // )
+    const mutation = useMutationHooks(
+
+        async (data) => {
+
+
+
+
+            const res = UserService.loginUser(data)
+
+
+            return res;
+        }
+    );
+
+    console.log('mutation', mutation)
     const { data, isLoading, isSuccess, isError } = mutation;
     useEffect(() => {
-        if (isSuccess) {
-            navigate('/')
+        console.log('location', location)
+
+        if (isSuccess && data?.status === 'OK') {
+            console.log('isSucess', isSuccess)
+            if (location?.state) {
+                navigate(location?.state)
+            } else {
+                navigate('/')
+            }
             console.log('data', data)
             localStorage.setItem('access_token', JSON.stringify(data?.access_token))
 
@@ -57,7 +81,7 @@ const SignInpage = () => {
 
                 }
             }
-        } else if (isError) {
+        } else {
             navigate('/sign-in')
             setErrorMessage('Tài khoản hoặc mật khẩu không chính xác');
             setShowAlert(true);

@@ -1,8 +1,22 @@
-import React from "react";
+import { useState, React, useEffect } from "react";
 import { WrapperContent, WrapperLableText, WrapperTextPrice } from "./style";
 import { Checkbox, Rate } from "antd";
+import * as ProductService from '../../services/ProductService'
 
+import TypeProduct from '../../components/TypeProduct/TypeProduct'
 const NavbarComponent = () => {
+    const [typeProducts, setTypeProducts] = useState([])
+    const fetAllTypeProduct = async () => {
+        const res = await ProductService.getAllTypeProduct()
+        if (res?.status === 'OK') {
+            setTypeProducts(res?.data)
+        }
+        console.log('res', res)
+        return res
+    }
+    useEffect(() => {
+        fetAllTypeProduct()
+    }, [])
     const onChange = {};
     const renderContent = (type, options) => {
         switch (type) {
@@ -52,31 +66,17 @@ const NavbarComponent = () => {
     }
     return (
         <div style={{ backgroundColor: '#fff' }}>
-            <WrapperLableText>label</WrapperLableText>
+            <WrapperLableText>Danh mục</WrapperLableText>
             <WrapperContent>
-                {renderContent('text', ['Tu lanh', 'TV', 'MAYGIAT'])}
+                {typeProducts.map((item) => {
+                    return (
+                        <TypeProduct name={item} key={item} />
+
+                    )
+                })}
 
             </WrapperContent>
-            {/* <WrapperContent>
 
-                {renderContent('checkbox', [
-                    { value: 'a', lable: 'A' },
-                    { value: 'b', lable: 'B' }
-                ])}
-            </WrapperContent>
-            <WrapperContent>
-
-                {renderContent('checkbox', [
-                    { value: 'a', lable: 'A' },
-                    { value: 'b', lable: 'B' }
-                ])}
-            </WrapperContent>
-            <WrapperContent>
-                {renderContent('star', [3, 4, 5])}
-            </WrapperContent>
-            <WrapperContent>
-                {renderContent('price', ['duoi 40', 'tren 50'])}
-            </WrapperContent> */}
         </div>
     )
 }

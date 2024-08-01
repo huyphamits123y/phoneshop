@@ -168,3 +168,10 @@ const AdminPage = () => {
     )
 }
 export default AdminPage
+// import React from "react";
+// const AdminPage = () => {
+//     return (
+//         <div>ccne</div>
+//     )
+// }
+// export default AdminPage

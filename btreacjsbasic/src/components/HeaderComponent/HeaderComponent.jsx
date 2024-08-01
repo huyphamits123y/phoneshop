@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetUser } from '../../redux/slides/userSlide'
 import { useState } from "react";
+import { searchProduct } from '../../redux/slides/productSlide';
 const Loading = ({ isLoading, children }) => (
     isLoading ? <div>Loading...</div> : <>{children}</>
 );
@@ -17,13 +18,19 @@ const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
     const [userName, setUserName] = useState('');
     const [userAvatar, setUserAvatar] = useState('');
     const user = useSelector((state) => state.user)
+    const order = useSelector((state) => state.order)
     const dispatch = useDispatch();
+    const [search, setSearch] = useState('')
     const [loading, setLoading] = useState(false)
+
+    // console.log("userid", user?.id)
+    // console.log("cc", order?.orderItems?.[0]?.id);
 
     const handleNavigateLogin = () => {
         navigate('/sign-in')
 
     }
+
     const handleLogout = async () => {
         await UserService.logoutUser();
         localStorage.removeItem('access_token');
@@ -34,13 +41,30 @@ const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
 
 
     }
+    // useEffect(() => {
+    //     if (order?.orderItems) {
+    //         console.log('Product IDs:', order.orderItems.map(item => item.id));
+    //     }
+    // }, [order?.orderItems]);
     useEffect(() => {
         setUserName(user?.name)
         setUserAvatar(user?.avatar)
 
     }, [user?.name, user?.avatar])
+    const onSearch = (e) => {
+        setSearch('e', e.target.value)
+        dispatch(searchProduct(e.target.value))
 
-    console.log('user', user)
+
+    }
+    // const userCartItems = order?.orderItems
+    //     ?.filter(item => item?.id === user?.id)
+    //     .map(item => item);
+
+    // const cartItemCount = userCartItems.length;
+    // console.log('sl cart', cartItemCount)
+
+    // console.log('user', user)
     const content = (
         <div>
             <WrapperContentPopup onClick={handleLogout}>Dang Xuat</WrapperContentPopup>
@@ -59,13 +83,15 @@ const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
                 <Col span={5}>
                     <WrapperTextHeader> HUYPHAM</WrapperTextHeader>
                 </Col>
-                {!isHiddenSearch && (
+                {/* !{isHiddenSearch && ( */}
+                {isHiddenSearch && (
                     <Col span={13}>
                         <ButtonInputSearch
                             size="large"
                             textButton="Tim kiem"
                             placeholder="input search text"
                             bordered={false}
+                            onChange={onSearch}
 
 
 
@@ -115,15 +141,59 @@ const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
                         </WrapperHeaderAccount>
 
                     </Loading>
+                    {/* {isHiddenCart && ( */}
 
-                    {!isHiddenCart && (
-                        <div style={{ marginLeft: '100px' }}>
-                            <Badge count={4} size="small">
+                    {isHiddenCart && (
+
+                        <div style={{ marginLeft: '100px', cursor: 'pointer' }} onClick={() => navigate('/order')}>
+                            <Badge count={order?.orderItems?.length || 0} size="small">
                                 <ShoppingCartOutlined style={{ fontSize: '30px', color: '#fff' }} />
                             </Badge>
                             <WrapperTextHeaderSmall>Cart</WrapperTextHeaderSmall>
                         </div>
                     )}
+
+                    {/* {user?.id ? (
+                        <div style={{ marginLeft: '100px', cursor: 'pointer' }} onClick={() => navigate('/order')}>
+                            <Badge count={order?.orderItems?.length || 0} size="small">
+                                <ShoppingCartOutlined style={{ fontSize: '30px', color: '#fff' }} />
+                            </Badge>
+                            <WrapperTextHeaderSmall>Cart</WrapperTextHeaderSmall>
+                        </div>
+
+
+                    ) : (
+                        <div style={{ marginLeft: '100px', cursor: 'pointer' }} onClick={() => navigate('/order')}>
+                            <Badge count={0} size="small">
+                                <ShoppingCartOutlined style={{ fontSize: '30px', color: '#fff' }} />
+                            </Badge>
+                            <WrapperTextHeaderSmall>Cart</WrapperTextHeaderSmall>
+                        </div>
+
+
+
+
+                    )} */}
+                    {/* {order?.orderItems?.some(item => item.userId === user?.id) ? (
+                        <div style={{ marginLeft: '100px', cursor: 'pointer' }} onClick={() => navigate('/order')}>
+                            <Badge
+                                count={order?.orderItems?.filter(item => item?.userId === user?.id).length}
+                                size="small"
+                            >
+                                <ShoppingCartOutlined style={{ fontSize: '30px', color: '#fff' }} />
+                            </Badge>
+                            <WrapperTextHeaderSmall>Cart</WrapperTextHeaderSmall>
+                        </div>
+                    ) : (
+                        <div style={{ marginLeft: '100px', cursor: 'pointer' }} onClick={() => navigate('/order')}>
+                            <Badge count={0} size="small">
+                                <ShoppingCartOutlined style={{ fontSize: '30px', color: '#fff' }} />
+                            </Badge>
+                            <WrapperTextHeaderSmall>Cart</WrapperTextHeaderSmall>
+                        </div>
+                    )} */}
+
+
                 </Col>
             </WrapperHeader>
         </div>

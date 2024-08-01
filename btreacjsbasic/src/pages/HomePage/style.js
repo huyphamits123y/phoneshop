@@ -23,9 +23,22 @@ export const WrapperButtonMore = styled(ButtonComponent)`
 `
 
 export const WrapperProducts = styled.div`
-       display:flex;
-       justify-content:center;
-       gap: 15px;
-       margin-top:20px;
-       flex-wrap:wrap; 
+       // display:flex;
+       // justify-content:center;
+       // gap: 15px;
+       // margin-top:20px;
+       // padding-bottom: 100px;
+       // flex-wrap:wrap; 
+       //  overflow: hidden;
+
+       display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+  flex-wrap: wrap; 
+  overflow: hidden;
+  padding-bottom: 100px; /* Khoảng cách cố định với Footer */
+  ${({ visibleProducts, totalProducts }) => visibleProducts >= totalProducts && `
+    padding-bottom: 100px;
+  `}
 `
