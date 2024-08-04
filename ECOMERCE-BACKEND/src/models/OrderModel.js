@@ -3,6 +3,7 @@ const orderSchema = new mongoose.Schema({
 
     orderItems: [
         {
+
             name: { type: String, required: true },
             amount: { type: Number, required: true },
             image: { type: String, required: true },
@@ -12,6 +13,7 @@ const orderSchema = new mongoose.Schema({
                 ref: 'Product',
                 required: true,
             },
+
         },
     ],
     shippingAddress: {

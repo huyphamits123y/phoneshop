@@ -23,11 +23,35 @@ const createOrder = async (req, res) => {
 
 
 }
+const listsOrder = async (req, res) => {
+    try {
+        const id = req.params.id;
+        console.log('id', id)
+
+        if (!id) {
+            return res.status(400).json({
+                status: 'ERR',
+                message: 'Id khong ton tai'
+            })
+        }
+        const response = await OrderService.listOrder(id)
+        return res.status(200).json(response)
+
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+    // console.log(req.body);
+    // return res.send("data success");
+
+}
 
 
 
 module.exports = {
-    createOrder
+    createOrder,
+    listsOrder
 
 
 }

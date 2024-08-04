@@ -448,6 +448,8 @@ const OrderPage = () => {
         phone: '',
         address: ''
     });
+    console.log('userid', user?.id)
+    console.log('itemsorder', order?.orderItems)
 
     const [form] = Form.useForm();
     const mutationUpdate = useMutationHooks(
@@ -509,11 +511,18 @@ const OrderPage = () => {
         }
     };
 
+    // const handleQuantityChange = (type, idProduct) => {
+    //     if (type === 'increase') {
+    //         dispatch(increaseAmount({ idProduct}));
+    //     } else if (type === 'decrease') {
+    //         dispatch(decreaseAmount({ idProduct }));
+    //     }
+    // };
     const handleQuantityChange = (type, idProduct) => {
         if (type === 'increase') {
-            dispatch(increaseAmount({ idProduct }));
+            dispatch(increaseAmount({ idProduct, userId: user?.id }));
         } else if (type === 'decrease') {
-            dispatch(decreaseAmount({ idProduct }));
+            dispatch(decreaseAmount({ idProduct, userId: user?.id }));
         }
     };
 
@@ -562,28 +571,48 @@ const OrderPage = () => {
             title: '',
             dataIndex: 'action',
             render: (text, record) => (
-                <Button type="link" onClick={() => dispatch(removeOrderProduct({ idProduct: record.key }))}>🗑</Button>
+                // <Button type="link" onClick={() => dispatch(removeOrderProduct({ idProduct: record.key }))}>🗑</Button>
+                <Button type="link" onClick={() => dispatch(removeOrderProduct({ idProduct: record.key, userId: user?.id }))}>🗑</Button>
                 // <Button type="link" onClick={() => dispatch(removeOrderProduct(record.key))}>🗑</Button>
             ),
         },
     ];
 
-    const data = order.orderItems.map(item => ({
-        key: item.product,
-        product: (
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-                <img
-                    src={item.image}
-                    alt={item.name}
-                    style={{ marginRight: 10 }}
-                />
-                <span>{item.name}</span>
-            </div>
-        ),
-        price: item.price,
-        quantity: item.amount, // Use amount from Redux store
-        total: item.price * item.amount,
-    }));
+    // const data = order.orderItems.map(item => ({
+    //     key: item.product,
+    //     product: (
+    //         <div style={{ display: 'flex', alignItems: 'center' }}>
+    //             <img
+    //                 src={item.image}
+    //                 alt={item.name}
+    //                 style={{ marginRight: 10 }}
+    //             />
+    //             <span>{item.name}</span>
+    //         </div>
+    //     ),
+    //     price: item.price,
+    //     quantity: item.amount, // Use amount from Redux store
+    //     total: item.price * item.amount,
+    // }));
+    const data = order.orderItems
+        .filter(item => item?.userId === user?.id) // Lọc các item có userId bằng user.id
+        .map(item => ({
+            key: item.product,
+            product: (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <img
+                        src={item.image}
+                        alt={item.name}
+                        style={{ marginRight: 10 }}
+                    />
+                    <span>{item.name}</span>
+                </div>
+            ),
+            price: item.price,
+            quantity: item.amount, // Sử dụng amount từ Redux store
+            total: item.price * item.amount,
+        }));
+
 
     const calculateTotal = () => data.reduce((acc, item) => acc + item.total, 0).toFixed(2);
 
@@ -614,13 +643,10 @@ const OrderPage = () => {
                             <Col>Tạm tính</Col>
                             <Col>{calculateTotal()}</Col>
                         </Row>
-                        <Row justify="space-between" style={{ marginBottom: 10 }}>
-                            <Col>Phí giao hàng</Col>
-                            <Col>3 VND</Col>
-                        </Row>
+
                         <Row justify="space-between" style={{ marginBottom: 10, fontWeight: 'bold' }}>
-                            <Col>Tổng tiền</Col>
-                            <Col>{calculateTotal() - 3} VND</Col>
+                            <Col>Tổng tiền sản phẩm</Col>
+                            <Col>{calculateTotal()} VND</Col>
                         </Row>
                         <ButtonComponent
                             onClick={() => handleAddCard()}

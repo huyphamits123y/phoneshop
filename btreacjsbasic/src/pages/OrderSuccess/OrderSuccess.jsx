@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Checkbox, InputNumber, Button, Row, Col, Modal, Form, Radio, Typography, Divider } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { decreaseAmount, increaseAmount, removeOrderProduct } from '../../redux/slides/orderSlide';
+
 import { convertPrice } from '../../utils';
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
@@ -14,38 +14,64 @@ import { useMutationHooks } from '../../hooks/useMutationHook';
 import * as message from '../../components/Message/Message';
 import * as UserService from '../../services/UserService';
 import * as OrderService from '../../services/OrderService'
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { orderContant } from '../../contant';
-
+import { decreaseAmount, increaseAmount, removeAllUserProducts, removeOrderProduct } from '../../redux/slides/orderSlide';
 const { Title } = Typography;
 const OrderSuccess = () => {
     const location = useLocation();
+
+    const queryClient = useQueryClient();
+    const [filteredOrderItems, setFilteredOrderItems] = useState([]);
     const state = location.state;
     const order = useSelector(state => state.order);
     const user = useSelector(state => state.user);
+    const navigate = useNavigate()
 
     const dispatch = useDispatch();
     let a = 0;
+    const mutationAddOrder = useMutationHooks(
+
+        async (data) => {
+
+            const { id, token, ...rests } = data;
+
+
+            const res = await OrderService.createOrder(token, { ...rests },);
+
+
+            return res;
+        }
+    );
+
+    const filterOrderItemsByUser = (orderItems, userId) => {
+        return orderItems.filter(item => item?.userId === userId);
+    };
+
+    useEffect(() => {
+        if (order?.orderItems && user?.id) {
+            const filteredItems = filterOrderItemsByUser(order.orderItems, user.id);
+            setFilteredOrderItems(filteredItems);
+        }
+    }, [order?.orderItems, user?.id]); // Re-run effect when orderItems or user.id changes
+
+
+    console.log('orderitemfil', filteredOrderItems)
+
+
+
+
     if (state?.deliveryMethod === 'FAST') {
         a = 10;
     } else {
         a = 15;
     }
     const [localQuantities, setLocalQuantities] = useState({})
-    console.log('state', state?.paymentMethod, state?.deliveryMethod);
-    console.log('cc', orderContant.paymentMethod[state?.paymentMethod])
-    useEffect(() => {
-        const initialQuantities = {};
-        order.orderItems.forEach(item => {
-            initialQuantities[item.product] = item.amount;
-        });
-        setLocalQuantities(initialQuantities);
-    }, [order]);
+
     const columns = [
         {
             title: 'Tất cả',
             dataIndex: 'product',
-            // render: (text) => <Checkbox>{text}</Checkbox>,
         },
         {
             title: 'Đơn giá',
@@ -54,70 +80,65 @@ const OrderSuccess = () => {
         {
             title: 'Số lượng',
             dataIndex: 'quantity',
-            render: (text, record) => (
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <h2>{localQuantities[record.key]}</h2>
 
-
-
-                </div>
-            ),
         },
         {
             title: 'Thành tiền',
             dataIndex: 'total',
-            render: (text, record) => <span>{(record.price * localQuantities[record.key]).toFixed(2)}</span>,
+            render: (text, record) => <span>{(record.price * record.quantity).toFixed(2)}</span>,
         },
-        // {
-        //     title: '',
-        //     dataIndex: 'action',
-        //     render: (text, record) => (
-        //         <Button type="link" onClick={() => dispatch(removeOrderProduct(record.key))}>🗑</Button>
-        //     ),
-        // },
+
     ];
-
-    const data = order.orderItems.map((item) => ({
-        key: item.product,
-        product: (
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-                <img
-                    src={item.image}
-                    alt={item.name}
-                    style={{ marginRight: 10 }}
-                />
-                <span>{item.name}</span>
-            </div>
-        ),
-        price: item.price,
-        // quantity: item.amount,
-        // total: item.price * item.amount,
-        quantity: localQuantities[item.product],
-        total: item.price * localQuantities[item.product],
-    }));
-    // const data = order.orderItems
-    //     .filter(item => user?.id === item?.userId)
-    //     .map((item) => ({
-    //         key: item.product,
-    //         product: (
-    //             <div style={{ display: 'flex', alignItems: 'center' }}>
-    //                 <img
-    //                     src={item.image}
-    //                     alt={item.name}
-    //                     style={{ marginRight: 10 }}
-    //                 />
-    //                 <span>{item.name}</span>
-    //             </div>
-    //         ),
-    //         price: item.price,
-    //         quantity: localQuantities[item.product],
-    //         total: item.price * localQuantities[item.product],
-    //     }));
-
+    const data = order.orderItems
+        .filter(item => item?.userId === user?.id) // Lọc các item có userId bằng user.id
+        .map(item => ({
+            key: item.product,
+            product: (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <img
+                        src={item.image}
+                        alt={item.name}
+                        style={{ marginRight: 10 }}
+                    />
+                    <span>{item.name}</span>
+                </div>
+            ),
+            price: item.price,
+            quantity: item.amount, // Sử dụng amount từ Redux store
+            total: item.price * item.amount,
+        }));
     const calculateTotal = () => data.reduce((acc, item) => acc + item.total, 0).toFixed(2);
-    const handlepayment = () => {
+    let total = calculateTotal()
+    const handleAddOrder = () => {
+
+
+        if (user?.access_token && filteredOrderItems.length > 0 && user?.name && user?.address && user?.phone && user?.id) {
+            mutationAddOrder.mutate(
+                {
+                    token: user?.access_token, orderItems: filteredOrderItems, fullName: user?.name, address: user?.address, phone: user?.phone, paymentMethod: state?.paymentMethod, deliveryMethod: state?.deliveryMethod, totalPrice: total, user: user?.id
+
+                }
+            )
+
+            dispatch(removeAllUserProducts({ userId: user?.id }))
+        }
+
 
     }
+    const { data: dataAdd, isSuccess: isSuccessAdd, isError: isErrorAdd } = mutationAddOrder
+    useEffect(() => {
+        if (isSuccessAdd && dataAdd?.status === 'OK') {
+            message.success('Đặt hàng thành công')
+            navigate('/payment-order')
+        } else if (isErrorAdd) {
+            message.error()
+        }
+    }, [isSuccessAdd, isErrorAdd])
+
+
+
+
+
 
 
     return (
@@ -143,12 +164,12 @@ const OrderSuccess = () => {
                         <Title level={5}>Phí thanh toán</Title>
                         <h2><span style={{ color: '#FF9933' }}>Tổng tiền sản phẩm </span> {calculateTotal()} VND</h2>
                         <h2><span style={{ color: '#FF9933' }}>Phí vận chuyển </span> {a} VND</h2>
-                        <h2><span style={{ color: '#FF9933' }}>Tổng tiền cần thanh toán </span> {calculateTotal() - a} VND</h2>
+                        <h2><span style={{ color: '#FF9933' }}>Tổng tiền cần thanh toán </span> {calculateTotal() + a} VND</h2>
 
                     </div>
                     <div>
                         <ButtonComponent
-                            onClick={() => handlepayment()}
+                            onClick={() => handleAddOrder()}
                             size={40}
                             styleButton={{
                                 background: 'rgb(255,57,69)',

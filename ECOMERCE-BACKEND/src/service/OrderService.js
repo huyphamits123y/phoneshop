@@ -41,10 +41,42 @@ const createOrder = (newOrder) => {
         }
     })
 }
+const listOrder = (user) => {
 
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            const listsOrder = await Order.find({ user: user });
+            if (listsOrder === null) {
+                resolve({
+                    status: 'OK',
+                    message: 'id khong ton tai'
+                })
+            }
+
+
+
+            resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+                data: listsOrder,
+            })
+
+
+
+
+
+
+        } catch (e) {
+            reject(e)
+            console.log('not success')
+        }
+    })
+}
 
 module.exports = {
-    createOrder
+    createOrder,
+    listOrder
 
 
 }

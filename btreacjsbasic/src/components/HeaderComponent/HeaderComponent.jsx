@@ -143,7 +143,7 @@ const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
                     </Loading>
                     {/* {isHiddenCart && ( */}
 
-                    {isHiddenCart && (
+                    {/* {isHiddenCart && (
 
                         <div style={{ marginLeft: '100px', cursor: 'pointer' }} onClick={() => navigate('/order')}>
                             <Badge count={order?.orderItems?.length || 0} size="small">
@@ -151,7 +151,7 @@ const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
                             </Badge>
                             <WrapperTextHeaderSmall>Cart</WrapperTextHeaderSmall>
                         </div>
-                    )}
+                    )} */}
 
                     {/* {user?.id ? (
                         <div style={{ marginLeft: '100px', cursor: 'pointer' }} onClick={() => navigate('/order')}>
@@ -174,7 +174,7 @@ const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
 
 
                     )} */}
-                    {/* {order?.orderItems?.some(item => item.userId === user?.id) ? (
+                    {order?.orderItems?.some(item => item.userId === user?.id) ? (
                         <div style={{ marginLeft: '100px', cursor: 'pointer' }} onClick={() => navigate('/order')}>
                             <Badge
                                 count={order?.orderItems?.filter(item => item?.userId === user?.id).length}
@@ -191,7 +191,7 @@ const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
                             </Badge>
                             <WrapperTextHeaderSmall>Cart</WrapperTextHeaderSmall>
                         </div>
-                    )} */}
+                    )}
 
 
                 </Col>

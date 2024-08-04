@@ -5,6 +5,7 @@ import NotFoundPage from '../pages/NotFoundPage/NotFoundPage'
 import SignInPage from '../pages/SignInPage/SignInPage'
 import SignUpPage from '../pages/SignUpPage/SignUpPage'
 import AdminPage from '../pages/AdminPage/AdminPage'
+import PaymentOrderPage from '../pages/PaymentOrderPage/PaymentOrderPage'
 import ProfilePage from '../pages/Profile/ProfilePage'
 import ProductDetailsPage from '../pages/ProductDetailsPage/ProductDetailsPage'
 import TypeProductPage from '../pages/TypeProductPage/TypeProductPage'
@@ -69,6 +70,12 @@ export const routes = [
     {
         path: '/profile-user',
         page: ProfilePage,
+        isShowHeader: true,
+
+    },
+    {
+        path: '/payment-order',
+        page: PaymentOrderPage,
         isShowHeader: true,
 
     },

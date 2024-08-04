@@ -19,3 +19,15 @@ export const createOrder = async (access_token, data) => {
         throw error;
     }
 };
+export const getListsOrder = async (id) => {
+
+    try {
+        const res = await axiosJWT.get(`/api/order/payment-order/${id}`)
+
+
+        return res.data;
+    } catch (error) {
+        console.error("Error fetching order:", error);
+        throw error;
+    }
+};

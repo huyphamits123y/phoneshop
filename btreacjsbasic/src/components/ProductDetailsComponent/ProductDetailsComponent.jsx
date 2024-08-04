@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useRef } from "react";
 import { Row, Col, Image, InputNumber, Rate } from 'antd'
 import { StarFilled, PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import imageProduct from '../../assets/images/image1.png';
@@ -51,8 +51,7 @@ const ProductDetailsComponent = () => {
 
 
                 orderItem: {
-
-
+                    userId: user?.id,
                     name: productdetails?.name,
                     amount: numProduct,
                     image: productdetails?.image,
@@ -108,6 +107,14 @@ const ProductDetailsComponent = () => {
         }
 
     }
+    const elementRef = useRef(null);
+
+    const handleClick = () => {
+        console.log('cc')
+        if (elementRef.current) {
+            console.log('ref', elementRef.current); // Truy cập phần tử DOM thông qua refs
+        }
+    };
 
 
 
@@ -199,6 +206,7 @@ const ProductDetailsComponent = () => {
                         textButton={'Chon mua'}
                         styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
                     ></ButtonComponent>
+
                     <ButtonComponent
                         size={40}
                         bordered={false}
