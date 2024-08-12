@@ -105,7 +105,7 @@ const ProfilePage = () => {
 
     return (
         <div style={{ width: '1270px', margin: '0 auto' }}>
-            <WrapperHeader>Thong tin nguoi dung</WrapperHeader>
+            <WrapperHeader>Thông tin người dùng</WrapperHeader>
             <WrapperContentProfile>
                 <WrapperInput>
                     <WrapperLable htmlFor='name'>name</WrapperLable>

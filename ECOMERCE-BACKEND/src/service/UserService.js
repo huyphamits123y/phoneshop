@@ -11,7 +11,7 @@ const createUser = (newUser) => {
                 email: email
             })
             if (checkUser !== null) {
-                resolve({
+                reject({
                     status: 'OK',
                     message: 'Email da ton tai'
                 })
@@ -205,7 +205,7 @@ const deleteUser = (id) => {
         }
     })
 }
-const getAllUser = (id) => {
+const getAllUser = () => {
     return new Promise(async (resolve, reject) => {
 
         try {
@@ -253,10 +253,7 @@ const getDetailsUser = (id) => {
                     message: 'The user is not defined'
                 })
             }
-            console.log('user', user)
 
-
-            console.log('lay thong tin user thanh cong');
 
 
             resolve({

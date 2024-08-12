@@ -7,7 +7,9 @@ import ButtonInputSearch from '../ButtonInputSearch/ButtonInputSearch';
 import * as UserService from '../../services/UserService'
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { resetUser } from '../../redux/slides/userSlide'
+import { resetUser } from '../../redux/slides/userSlide';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBagShopping } from '@fortawesome/free-solid-svg-icons';
 import { useState } from "react";
 import { searchProduct } from '../../redux/slides/productSlide';
 const Loading = ({ isLoading, children }) => (
@@ -23,8 +25,7 @@ const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
     const [search, setSearch] = useState('')
     const [loading, setLoading] = useState(false)
 
-    // console.log("userid", user?.id)
-    // console.log("cc", order?.orderItems?.[0]?.id);
+
 
     const handleNavigateLogin = () => {
         navigate('/sign-in')
@@ -35,17 +36,11 @@ const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
         await UserService.logoutUser();
         localStorage.removeItem('access_token');
         dispatch(resetUser())
-        // setLoading(false)
-        // console.log("user", user);
 
 
 
     }
-    // useEffect(() => {
-    //     if (order?.orderItems) {
-    //         console.log('Product IDs:', order.orderItems.map(item => item.id));
-    //     }
-    // }, [order?.orderItems]);
+
     useEffect(() => {
         setUserName(user?.name)
         setUserAvatar(user?.avatar)
@@ -57,20 +52,13 @@ const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
 
 
     }
-    // const userCartItems = order?.orderItems
-    //     ?.filter(item => item?.id === user?.id)
-    //     .map(item => item);
 
-    // const cartItemCount = userCartItems.length;
-    // console.log('sl cart', cartItemCount)
-
-    // console.log('user', user)
     const content = (
         <div>
-            <WrapperContentPopup onClick={handleLogout}>Dang Xuat</WrapperContentPopup>
-            <WrapperContentPopup onClick={() => navigate('/profile-user')}>Thong tin nguoi dung</WrapperContentPopup>
+            <WrapperContentPopup onClick={handleLogout}>Đăng xuất</WrapperContentPopup>
+            <WrapperContentPopup onClick={() => navigate('/profile-user')}>Thông tin người dùng</WrapperContentPopup>
             {user?.isAdmin && (
-                <WrapperContentPopup onClick={() => navigate('/system/admin')}>Quan li he thong</WrapperContentPopup>
+                <WrapperContentPopup onClick={() => navigate('/system/admin')}>Quản lí hệ thống</WrapperContentPopup>
 
             )}
 
@@ -80,7 +68,7 @@ const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
     return (
         <div style={{ width: '100%', background: 'rgb(26,148,255)', display: 'flex', justifyContent: 'center' }}>
             <WrapperHeader style={{ justifyContent: isHiddenSearch && isHiddenSearch ? 'space-between' : 'unset' }}>
-                <Col span={5}>
+                <Col span={3}>
                     <WrapperTextHeader> HUYPHAM</WrapperTextHeader>
                 </Col>
                 {/* !{isHiddenSearch && ( */}
@@ -88,8 +76,8 @@ const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
                     <Col span={13}>
                         <ButtonInputSearch
                             size="large"
-                            textButton="Tim kiem"
-                            placeholder="input search text"
+                            textButton="Tìm kiếm"
+                            placeholder="Tìm kiếm"
                             bordered={false}
                             onChange={onSearch}
 
@@ -98,7 +86,7 @@ const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
                         />
                     </Col>
                 )}
-                <Col span={6} style={{ display: 'flex', gap: '54px', alignItems: 'center' }}>
+                <Col span={7} style={{ display: 'flex', gap: '54px', alignItems: 'center' }}>
                     <Loading isLoading={loading}>
                         <WrapperHeaderAccount>
                             {userAvatar ? (
@@ -113,9 +101,7 @@ const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
                                 <UserOutlined style={{ fontSize: '30px' }} />
 
                             )}
-                            {/* <div>
-                                <UserOutlined style={{ fontSize: '30px' }} />
-                            </div> */}
+
                             {user?.access_token ? (
                                 <>
 
@@ -141,39 +127,7 @@ const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
                         </WrapperHeaderAccount>
 
                     </Loading>
-                    {/* {isHiddenCart && ( */}
 
-                    {/* {isHiddenCart && (
-
-                        <div style={{ marginLeft: '100px', cursor: 'pointer' }} onClick={() => navigate('/order')}>
-                            <Badge count={order?.orderItems?.length || 0} size="small">
-                                <ShoppingCartOutlined style={{ fontSize: '30px', color: '#fff' }} />
-                            </Badge>
-                            <WrapperTextHeaderSmall>Cart</WrapperTextHeaderSmall>
-                        </div>
-                    )} */}
-
-                    {/* {user?.id ? (
-                        <div style={{ marginLeft: '100px', cursor: 'pointer' }} onClick={() => navigate('/order')}>
-                            <Badge count={order?.orderItems?.length || 0} size="small">
-                                <ShoppingCartOutlined style={{ fontSize: '30px', color: '#fff' }} />
-                            </Badge>
-                            <WrapperTextHeaderSmall>Cart</WrapperTextHeaderSmall>
-                        </div>
-
-
-                    ) : (
-                        <div style={{ marginLeft: '100px', cursor: 'pointer' }} onClick={() => navigate('/order')}>
-                            <Badge count={0} size="small">
-                                <ShoppingCartOutlined style={{ fontSize: '30px', color: '#fff' }} />
-                            </Badge>
-                            <WrapperTextHeaderSmall>Cart</WrapperTextHeaderSmall>
-                        </div>
-
-
-
-
-                    )} */}
                     {order?.orderItems?.some(item => item.userId === user?.id) ? (
                         <div style={{ marginLeft: '100px', cursor: 'pointer' }} onClick={() => navigate('/order')}>
                             <Badge
@@ -182,16 +136,56 @@ const HeaderComponent = (isHiddenSearch = false, isHiddenCart = false) => {
                             >
                                 <ShoppingCartOutlined style={{ fontSize: '30px', color: '#fff' }} />
                             </Badge>
-                            <WrapperTextHeaderSmall>Cart</WrapperTextHeaderSmall>
+                            <WrapperTextHeaderSmall>Giỏ hàng</WrapperTextHeaderSmall>
+
                         </div>
                     ) : (
                         <div style={{ marginLeft: '100px', cursor: 'pointer' }} onClick={() => navigate('/order')}>
                             <Badge count={0} size="small">
                                 <ShoppingCartOutlined style={{ fontSize: '30px', color: '#fff' }} />
                             </Badge>
-                            <WrapperTextHeaderSmall>Cart</WrapperTextHeaderSmall>
+                            <WrapperTextHeaderSmall>Giỏ hàng</WrapperTextHeaderSmall>
+
                         </div>
                     )}
+
+
+
+                    {/* <div style={{ cursor: 'pointer' }} onClick={() => navigate('/payment-order')}>
+                        <Badge count={0} size="small">
+                            <FontAwesomeIcon
+
+                                icon={faBagShopping}
+                                style={{
+                                    fontSize: '30px',
+
+                                    color: '#ffffff',
+
+                                    borderRadius: '5px'
+                                }}
+
+                            />
+                        </Badge>
+                        <WrapperTextHeaderSmall>Đơn hàng</WrapperTextHeaderSmall>
+                    </div> */}
+
+                    {user?.access_token && (
+                        <div style={{ cursor: 'pointer' }} onClick={() => navigate('/payment-order')}>
+                            <Badge count={0} size="small">
+                                <FontAwesomeIcon
+                                    icon={faBagShopping}
+                                    style={{
+                                        fontSize: '30px',
+                                        color: '#ffffff',
+                                        borderRadius: '5px'
+                                    }}
+                                />
+                            </Badge>
+                            <WrapperTextHeaderSmall>Đơn hàng</WrapperTextHeaderSmall>
+                        </div>
+                    )}
+
+
 
 
                 </Col>

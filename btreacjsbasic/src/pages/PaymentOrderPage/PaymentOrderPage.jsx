@@ -181,19 +181,37 @@
 
 
 
-import React from 'react';
-import { Table, Divider, Typography } from 'antd';
-import { useSelector } from 'react-redux';
-import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from 'react-router';
+// import React from 'react';
+// import { Table, Divider, Typography } from 'antd';
+// import { useSelector } from 'react-redux';
+// import { useQuery } from "@tanstack/react-query";
+// import { useNavigate } from 'react-router';
+// import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
+// import * as OrderService from '../../services/OrderService';
+// import { useMutationHooks } from "../../hooks/useMutationHook";
+// import { useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { useState, useEffect } from 'react';
+import { Table, Checkbox, InputNumber, Button, Row, Col, Modal, Form, Radio, Typography, Divider } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { decreaseAmount, increaseAmount, removeOrderProduct } from '../../redux/slides/orderSlide';
+import { convertPrice } from '../../utils';
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
-import * as OrderService from '../../services/OrderService';
+import ModalComponent from '../../components/ModalComponent/ModalComponent';
+import InputComponent from '../../components/InputComponent/InputComponent';
+import { useMutationHooks } from '../../hooks/useMutationHook';
+import * as message from '../../components/Message/Message';
+import * as UserService from '../../services/UserService';
+import * as OrderService from '../../services/OrderService'
+import { useLocation, useNavigate } from 'react-router';
+import { orderContant } from '../../contant';
 
 const { Title } = Typography;
 
 const PaymentOrderPage = () => {
     const user = useSelector(state => state.user);
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     const fetchGetListOrder = () => {
         return OrderService.getListsOrder(user?.id);
@@ -207,6 +225,8 @@ const PaymentOrderPage = () => {
     const { isLoading: isLoadingOrder, data: paymentOrders } = queryOrder;
 
 
+    console.log('user', user?.id)
+    console.log('orderid', paymentOrders?._id)
     console.log('payment', paymentOrders)
 
     const columns = [
@@ -233,10 +253,33 @@ const PaymentOrderPage = () => {
 
     const orders = paymentOrders?.data || [];
     console.log('orders', orders)
-    const handlePayment = () => {
-        navigate('/payment-order');
-    };
+    // const handlePayment = () => {
+    //     navigate('/payment-order');
+    // };
 
+    const mutationDelete = useMutationHooks(
+
+        async (data) => {
+
+            const { id, token } = data;
+
+
+            const res = await OrderService.deleteOrder(id, token);
+
+
+            return res;
+        }
+    );
+    const { data: dataDelete, isSuccess: isSuccessDelete, isError: isErrorDelete } = mutationDelete
+    useEffect(() => {
+        if (isSuccessDelete && dataDelete?.status === 'OK') {
+            message.success()
+
+            queryClient.invalidateQueries('orders');
+        } else if (isErrorDelete) {
+            message.error()
+        }
+    }, [isSuccessDelete])
 
     if (isLoadingOrder) return <div>Loading...</div>;
 
@@ -265,6 +308,59 @@ const PaymentOrderPage = () => {
 
                 }));
                 const totalPrice = data.reduce((acc, item) => acc + item.total, 0);
+                console.log('userIDddd', order?._id)
+                console.log('orderuser', order?.user)
+                console.log('useremail', user?.email)
+
+                const checkIsPaid = () => {
+
+                }
+                const handlePaymentOrder = async () => {
+                    try {
+                        console.log('order_id', order?.id)
+                        console.log('orderemail', order?.email)
+                        const response = await OrderService.paymentorder(order?._id)
+                        console.log('responese', response.data)
+                        if (response?.data?.return_code === 1) {
+                            const link = response.data.order_url
+                            console.log('link', link)
+                            window.location.href = link
+
+
+
+                            // }
+                            // const responese = await OrderService.sendEmailOrder(user?.email, order?._id)
+                            // if (responese.data) {
+                            //     console.log('mail gui thanh cong')
+                            // }
+
+
+
+
+                        }
+
+
+                    } catch (error) {
+                        console.log('error', error)
+                    }
+
+                }
+
+                const handleDeleteOrder = async () => {
+                    try {
+                        await mutationDelete.mutate({ id: order?._id, token: user?.access_token }, {
+                            onSettled: () => {
+                                queryClient.invalidateQueries('orders');
+                            }
+                        });
+                    } catch (error) {
+                        console.error("Error deleting order:", error);
+                        message.error('Failed to delete order');
+                    }
+                };
+
+
+
                 return (
                     <div
                         key={index}
@@ -285,14 +381,18 @@ const PaymentOrderPage = () => {
                     >
                         <Title level={5}>Đơn hàng {index + 1}</Title>
                         <h5>Trạng thái</h5>
-                        <h5>Giao hàng: <span style={{ color: 'red' }}>Chưa giao hàng</span></h5>
-                        <h5>Thanh toán: <span style={{ color: 'red' }}>Chưa thanh toán</span></h5>
+
+                        <h5>Thanh toán: <span style={{ color: order.isPaid ? 'green' : 'red' }}>{order.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</span></h5>
+
                         <h5>Phương thức vận chuyển: <span style={{ color: 'red' }}>{order?.deliveryMethod}</span></h5>
                         <h5>Tổng tiền cần thanh toán <span style={{ color: 'red' }}> {totalPrice.toLocaleString()}</span></h5>
 
                         <Table columns={columns} dataSource={data} pagination={false} />
                         <div style={{ display: 'flex', padding: '10px', width: '400px' }}>
                             <ButtonComponent
+
+                                onClick={() => handlePaymentOrder()}
+                                disable={order?.isPaid}
                                 size={40}
                                 bordered={false}
                                 styleButton={{
@@ -307,6 +407,8 @@ const PaymentOrderPage = () => {
                                 styleTextButton={{ color: 'rgb(13, 92, 182)', fontSize: '15px', fontWeight: '700' }}
                             ></ButtonComponent>
                             <ButtonComponent
+                                onClick={() => handleDeleteOrder()}
+                                disable={order?.isPaid}
                                 size={40}
                                 bordered={false}
                                 styleButton={{

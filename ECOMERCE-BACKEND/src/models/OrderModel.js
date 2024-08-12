@@ -32,6 +32,7 @@ const orderSchema = new mongoose.Schema({
     paidAt: { type: Date },
     isDelivered: { type: Boolean, default: false },
     deliveredAt: { type: Date },
+    orderToken: { type: String, default: "" }
 },
     {
         timestamps: true,

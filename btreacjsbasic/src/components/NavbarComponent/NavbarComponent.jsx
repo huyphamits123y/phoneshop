@@ -4,6 +4,7 @@ import { Checkbox, Rate } from "antd";
 import * as ProductService from '../../services/ProductService'
 
 import TypeProduct from '../../components/TypeProduct/TypeProduct'
+import SidebarComponent from "../SidebarComponent/SidebarComponent";
 const NavbarComponent = () => {
     const [typeProducts, setTypeProducts] = useState([])
     const fetAllTypeProduct = async () => {
@@ -71,6 +72,8 @@ const NavbarComponent = () => {
                 {typeProducts.map((item) => {
                     return (
                         <TypeProduct name={item} key={item} />
+
+                        // <SidebarComponent name={item} key={item} />
 
                     )
                 })}

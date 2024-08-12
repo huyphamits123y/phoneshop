@@ -25,8 +25,8 @@ const FooterComponent = () => {
 
                 <WrapperFooterSection className="contact">
                     <h2>Liên hệ</h2>
-                    <p>Email: contact@huypham.com</p>
-                    <p>Điện thoại: +84 123 456 789</p>
+                    <p>Email: huyzxv123@gmail.com</p>
+                    <p>Điện thoại: 0349369139</p>
                     <div className="socials">
                         <a href="#"><i className="fab fa-facebook-f"></i></a>
                         <a href="#"><i className="fab fa-twitter"></i></a>

@@ -5,6 +5,7 @@ export const StyleNameProduct = styled.div`
        font-size: 12px;
        line-height:16px;
        color: rgb(56,56,61);
+       margin-bottom:0px;
 `
 export const WrapperReporText = styled.div`
        font-size: 11px;

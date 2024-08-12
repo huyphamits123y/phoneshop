@@ -357,6 +357,8 @@ const AdminProduct = () => {
 
     const handleOnchangeAvatar = async (info) => {
         const { file } = info; // Lấy đối tượng file từ thông tin của upload
+
+
         if (!file.url && !file.preview) {
             // Nếu không có url và preview, thực hiện chuyển đổi và gán preview
             file.preview = await getBase64(file.originFileObj);
@@ -409,18 +411,7 @@ const AdminProduct = () => {
         setIsOpenDrawer(true)
         console.log('rowSelected', rowSelected)
     }
-    // const handleDeleteProduct = () => {
-    //     // console.log('row', rowSelected)
-    //     // if (rowSelected) {
-    //     //     fetchDeleteProduct()
 
-    //     // }
-    //     mutationDelete.mutate({ id: rowSelected }, {
-    //         onSettled: () => {
-    //             queryClient.invalidateQueries('products');
-    //         }
-    //     })
-    // }
     const handleDeleteProduct = async () => {
         try {
             await mutationDelete.mutate({ id: rowSelected, token: user?.access_token }, {

@@ -122,9 +122,9 @@ const PaymentPage = () => {
     let a = 0;
 
     if (deliveryMethod === 'FAST') {
-        a = 10
+        a = 40000
     } else {
-        a = 15
+        a = 30000
     }
     console.log('delivery', deliveryMethod)
 
@@ -179,6 +179,8 @@ const PaymentPage = () => {
 
 
     const calculateTotal = () => data.reduce((acc, item) => acc + item.total, 0).toFixed(2);
+
+
     let total = calculateTotal()
     console.log(total)
     // const handleAddOrder = () => {
@@ -290,7 +292,7 @@ const PaymentPage = () => {
                         </Row>
                         <Row justify="space-between" style={{ marginBottom: 10 }}>
                             <Col>Tạm tính</Col>
-                            <Col>{calculateTotal()}</Col>
+                            <Col>{Number(calculateTotal())}</Col>
                         </Row>
                         {/* <Row justify="space-between" style={{ marginBottom: 10 }}>
                             <Col>Giảm giá</Col>
@@ -306,7 +308,8 @@ const PaymentPage = () => {
                         </Row>
                         <Row justify="space-between" style={{ marginBottom: 10, fontWeight: 'bold' }}>
                             <Col>Tổng tiền</Col>
-                            <Col>{calculateTotal() + a} VND</Col>
+                            <Col>{Number(calculateTotal()) + a} VND</Col>
+
                         </Row>
                         {/* <Button type="primary" style={{ width: '100%' }}>
                             Mua hàng
@@ -321,7 +324,7 @@ const PaymentPage = () => {
                                 border: 'none',
                                 borderRadius: '4px'
                             }}
-                            textButton={'Mua Hang'}
+                            textButton={'Mua Hàng'}
                             styleTextButton={{ color: '#fff', fontSize: "15px", fontWeight: '700' }}
 
                         >

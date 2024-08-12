@@ -5,14 +5,17 @@ const routes = require('./routes');
 const bodyParser = require('body-parser')
 const app = express();
 const qs = require('qs')
+const Order = require('./models/OrderModel')
 const port = process.env.PORT || 3001
 const cors = require('cors')
+const fileUpload = require('express-fileupload');
 const cookieParser = require('cookie-parser')
 const axios = require('axios').default; // npm install axios
 const CryptoJS = require('crypto-js'); // npm install crypto-js
 const moment = require('moment'); // npm install moment
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+
+const OrderService = require('./service/OrderService')
+const UserService = require('./service/UserService')
 
 
 
@@ -27,6 +30,7 @@ const config = {
     key2: `${process.env.key2}`,
     endpoint: `${process.env.endpoint}`
 }
+
 console.log('app_id', `${process.env.app_id}`)
 console.log('key1', `${process.env.key1}`)
 console.log('key2', `${process.env.key2}`)
@@ -36,9 +40,14 @@ app.use(express.urlencoded({ limit: '50mb' }));
 
 
 
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
+
+
 // app.use(cors())
 app.use(cookieParser())
-app.use(bodyParser.json())
+// app.use(bodyParser.json())
 routes(app);
 
 console.log(process.env.MONGO_DB)
@@ -75,7 +84,9 @@ app.post("/payment", async (req, res) => {
         redirecturl: "http://localhost:3000/"
     };
 
+
     const items = [{}];
+
     const transID = Math.floor(Math.random() * 1000000);
     const order = {
         app_id: config.app_id,
@@ -84,10 +95,10 @@ app.post("/payment", async (req, res) => {
         app_time: Date.now(), // miliseconds
         item: JSON.stringify(items),
         embed_data: JSON.stringify(embed_data),
-        amount: 50000,
-        description: `Lazada - Payment for the order #${transID}`,
+        amount: 1899000,
+        description: `Thanh toán MacBook Air 13 inch M1 #${transID}`,
         bank_code: "",
-        callback_url: "https://123d-2001-ee0-5531-6a00-4587-be4f-eade-4fe7.ngrok-free.app/callback"
+        callback_url: "https://ee1a-2001-ee0-553e-f6f0-2165-d691-acca-13b2.ngrok-free.app/callback"
     };
 
     // appid|app_trans_id|appuser|amount|apptime|embeddata|item
@@ -104,6 +115,8 @@ app.post("/payment", async (req, res) => {
     }
 
 })
+
+
 app.post("/callback", async (req, res) => {
     let result = {};
 
@@ -115,17 +128,51 @@ app.post("/callback", async (req, res) => {
         console.log("mac =", mac);
 
 
+
         // kiểm tra callback hợp lệ (đến từ ZaloPay server)
         if (reqMac !== mac) {
             // callback không hợp lệ
             result.return_code = -1;
             result.return_message = "mac not equal";
+            console.log('khong hop le')
         }
         else {
             // thanh toán thành công
             // merchant cập nhật trạng thái cho đơn hàng
+
+
             let dataJson = JSON.parse(dataStr, config.key2);
-            console.log("update order's status = success where app_trans_id =", dataJson["app_trans_id"]);
+            console.log("update order's status = success where app_trans_id = ", dataJson["app_trans_id"]);
+            const res = await OrderService.getAllOrder()
+            const user = await UserService.getAllUser()
+
+            const data = res.data.filter(item => item.orderToken === dataJson["app_trans_id"]);
+
+
+            if (data.length > 0) {
+                const firstMatch = data[0];
+                console.log('data', firstMatch)
+                await OrderService.updateisPaid(firstMatch?.id)
+                // console.log('user i d', firstMatch?.user?.toHexString())
+                // console.log('userss', user?.data)
+
+                const datauser = user.data.filter(users => users?._id.toHexString() === firstMatch?.user?.toHexString());
+                if (datauser.length > 0) {
+                    console.log('email')
+                    const userfirstMatch = datauser[0];
+                    console.log('email', userfirstMatch?.email)
+                    const dataemail = OrderService.sendEmailCreateOrder(userfirstMatch?.email, firstMatch?.id)
+                    if (dataemail) {
+                        console.log("gui mail thanh cong")
+                    }
+
+                }
+
+
+            }
+
+
+
 
             result.return_code = 1;
             result.return_message = "success";

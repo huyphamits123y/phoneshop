@@ -15,6 +15,7 @@
 // export default TypeProduct
 import React from 'react';
 import { useNavigate } from 'react-router-dom'; // Đúng import từ react-router-dom
+import { WrapperTypeProduct } from './style';
 
 const TypeProduct = ({ name }) => {
     const navigate = useNavigate();
@@ -25,9 +26,14 @@ const TypeProduct = ({ name }) => {
     };
 
     return (
-        <div style={{ padding: '0 10px', cursor: 'pointer' }} onClick={() => handleNavigateType(name)}>
+        // <div style={{ padding: '0 10px', cursor: 'pointer' }} onClick={() => handleNavigateType(name)}>
+        //     {name}
+        // </div>
+        <WrapperTypeProduct onClick={() => handleNavigateType(name)}>
+
             {name}
-        </div>
+
+        </WrapperTypeProduct>
     );
 };
 

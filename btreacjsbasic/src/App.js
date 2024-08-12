@@ -14,6 +14,7 @@ import { updateUser } from './redux/slides/userSlide';
 import { jwtDecode } from 'jwt-decode';
 import useSelection from 'antd/es/table/hooks/useSelection';
 import Loading from './components/LoadingComponent/Loading';
+import FooterComponent from './components/FooterComponent/FooterComponent';
 function App() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false)
@@ -100,6 +101,7 @@ function App() {
                   <Layout>
                     <Page />
                   </Layout>
+                  
                 } />
               );
             })}

@@ -10,6 +10,7 @@ import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useState } from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import { addOrderProduct } from '../../redux/slides/orderSlide'
+import * as OrderService from '../../services/OrderService'
 import { convertPrice } from "../../utils";
 import ReactDOM from 'react-dom';
 import { isDraft } from 'immer';
@@ -34,6 +35,22 @@ const ProductDetailsComponent = () => {
 
 
     }
+    const fetchGetAllOrder = () => {
+        return OrderService.getAllOrder()
+    };
+
+    const queryOrder = useQuery({
+        queryKey: ['order'],
+        queryFn: fetchGetAllOrder
+    });
+
+
+
+
+    const { isLoading: isLoadingOrder, data: allOrders } = queryOrder;
+
+
+
     console.log('id', user?.id)
     console.log('location', location)
     // const { isLoading, data: productDetails, error } = useQuery(['product-details', id], fetchGetDetailsProduct, { enabled: !!id })
@@ -43,6 +60,20 @@ const ProductDetailsComponent = () => {
 
     // const { isLoading: isLoadingProduct, data: productdetails } = useQuery(['product-details', id], fetchGetDetailsProduct);
     console.log('hello', productdetails)
+    let a = 0
+    const dataorder = allOrders?.data
+        ?.filter(order => order?.isPaid) // Filter orders by isPaid
+        .filter(order => order?.orderItems.some(item => item.name === productdetails?.name)); // Check if any orderItem has the specified name
+
+    dataorder?.forEach(order => {
+        order.orderItems
+            .filter(item => item.name === productdetails?.name) // Filter the items again by name
+            .forEach(item => {
+                console.log('Item Name:', item.name, 'Amount:', item.amount);
+                a += item.amount
+
+            });
+    });
     const handleAddOrderProduct = () => {
         if (!user?.id) {
             navigate('/sign-in', { state: location?.pathname })
@@ -67,27 +98,7 @@ const ProductDetailsComponent = () => {
         }
 
     }
-    // const handleAddOrderProduct = () => {
-    //     if (!user?.id) {
-    //         navigate('/sign-in', { state: location?.pathname });
-    //     } else if (productdetails) {
-    //         if (!isDraft(productdetails)) { // Kiểm tra nếu productdetails không bị thu hồi
-    //             dispatch(addOrderProduct({
-    //                 orderItem: {
-    //                     id: user?.id,
-    //                     name: productdetails?.name,
-    //                     amount: numProduct,
-    //                     image: productdetails?.image,
-    //                     price: productdetails?.price,
-    //                     product: productdetails?._id
-    //                 },
-    //                 userId: user.id
-    //             }));
-    //         } else {
-    //             console.warn('Đối tượng đã bị thu hồi, không thể thực hiện hành động này.');
-    //         }
-    //     }
-    // };
+
     const renderRating = (num) => {
         let stars = [];
         for (let i = 0; i < num; i++) {
@@ -122,32 +133,8 @@ const ProductDetailsComponent = () => {
     return (
         <Row style={{ padding: '16px', background: '#fff', borderRadius: '4px' }}>
             <Col span={10} style={{ borderRight: '1px solid #e5e5e5', paddingRight: '8px' }}>
-                <Image src={productdetails?.image} alt="image product" preview={false} style={{ height: '650px', width: '520px' }} />
-                <Row style={{ paddingTop: '10px', justifyContent: 'space-between' }}>
-                    <WrapperStyleColImage span={4}>
-                        <WrapperStyleImageSmall src={imageProduct} alt="image small" preview={false} />
-                    </WrapperStyleColImage>
+                <Image src={productdetails?.image} alt="image product" preview={false} style={{ width: '520px' }} />
 
-                    <WrapperStyleColImage span={4}>
-                        <WrapperStyleImageSmall src={imageProduct} alt="image small" preview={false} />
-                    </WrapperStyleColImage>
-
-                    <WrapperStyleColImage span={4}>
-                        <WrapperStyleImageSmall src={imageProduct} alt="image small" preview={false} />
-                    </WrapperStyleColImage>
-
-                    <WrapperStyleColImage span={4}>
-                        <WrapperStyleImageSmall src={imageProduct} alt="image small" preview={false} />
-                    </WrapperStyleColImage>
-
-                    <WrapperStyleColImage span={4}>
-                        <WrapperStyleImageSmall src={imageProduct} alt="image small" preview={false} />
-                    </WrapperStyleColImage>
-
-
-
-
-                </Row>
             </Col>
             <Col span={14} style={{ paddingLeft: '10px' }}>
                 <WrapperStyleNameProduct>{productdetails?.name}</WrapperStyleNameProduct>
@@ -159,19 +146,19 @@ const ProductDetailsComponent = () => {
                     <StarFilled style={{ fontSize: '12px', color: 'rgb(253,216,54)' }} />
                     <StarFilled style={{ fontSize: '12px', color: 'rgb(253,216,54)' }} /> */}
 
-                    <WrapperStyleTextSell>| Da ban 1000+</WrapperStyleTextSell>
+                    <WrapperStyleTextSell>| Đã bán {a}</WrapperStyleTextSell>
                 </div>
                 <WrapperPriceProduct>
                     <WrapperPriceTextProduct>{convertPrice(productdetails?.price)}</WrapperPriceTextProduct>
                 </WrapperPriceProduct>
                 <WrapperAddressProduct>
-                    <span>Giao den</span>
+                    <span>Giao đến : </span>
                     <span className='address'>{user?.address}</span>
-                    <span className='change-address'>-Doi dia chi</span>
+
                 </WrapperAddressProduct>
                 <div style={{ margin: '10px 0 20px', borderTop: '1px solid #e5e5e5', borderBottom: '1px solid #e5e5e5', padding: '10px 0' }}>
                     <div style={{ marginBottom: '10px' }}>
-                        So Luong
+                        Số lượng
                     </div>
                     <WrapperQualityProduct>
 
@@ -203,7 +190,7 @@ const ProductDetailsComponent = () => {
                             borderRadius: '4px'
                         }}
                         onClick={handleAddOrderProduct}
-                        textButton={'Chon mua'}
+                        textButton={'Chọn mua'}
                         styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
                     ></ButtonComponent>
 
@@ -217,7 +204,7 @@ const ProductDetailsComponent = () => {
                             border: '1px solid rgb(13,92,182)',
                             borderRadius: '4px'
                         }}
-                        textButton={'Mua tra sau'}
+                        textButton={'Mua trả sau'}
                         styleTextButton={{ color: 'rgb(13, 92, 182)', fontSize: '15px', fontWeight: '700' }}
                     ></ButtonComponent>
 

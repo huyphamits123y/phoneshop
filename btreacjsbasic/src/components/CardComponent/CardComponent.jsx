@@ -1,15 +1,57 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Meta from 'antd/lib/card/Meta'
 import { Card, Image } from 'antd'
 import { StyleNameProduct, WrapperCardStyle, WrapperDiscountText, WrapperPriceText, WrapperReporText, WrapperStyleTextSell } from './style'
-import imageProduct from '../../assets/images/image1.png';
+import imageProduct from '../../assets/images/imagess.png';
 import { StarFilled } from '@ant-design/icons'
 import logo from '../../assets/images/logo.png'
 import { useNavigate } from 'react-router-dom'
 import { convertPrice } from '../../utils';
+import * as OrderService from '../../services/OrderService'
+import { useDispatch, useSelector } from 'react-redux';
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 const CardComponent = (props) => {
 
     const { countInStock, description, image, name, price, rating, type, discount, selled, id } = props
+
+    const order = useSelector(state => state.order);
+    const fetchGetAllOrder = () => {
+        return OrderService.getAllOrder()
+    };
+
+    const queryOrder = useQuery({
+        queryKey: ['order'],
+        queryFn: fetchGetAllOrder
+    });
+
+
+
+
+    const { isLoading: isLoadingOrder, data: allOrders } = queryOrder;
+    // const data = allOrders?.data?.flatMap(order => order.orderItems).filter(item => item.name === name);
+    // const dataorder = allOrders?.data
+    //     ?.filter(order => order?.isPaid) // Filter orders by isPaid
+    //     .filter(order => order?.orderItems.some(item => item.name === name)); // Check if any orderItem has the specified name
+
+    // console.log('data', dataorder?.orderItems?.name, ' so luong ', dataorder?.amount)
+
+    let a = 0
+    const dataorder = allOrders?.data
+        ?.filter(order => order?.isPaid) // Filter orders by isPaid
+        .filter(order => order?.orderItems.some(item => item.name === name)); // Check if any orderItem has the specified name
+
+    dataorder?.forEach(order => {
+        order.orderItems
+            .filter(item => item.name === name) // Filter the items again by name
+            .forEach(item => {
+                console.log('Item Name:', item.name, 'Amount:', item.amount);
+                a += item.amount
+
+            });
+    });
+    console.log('tong san pham', name, ' : ', a)
+
+
 
     const navigate = useNavigate()
     const handleDetailsProduct = (id) => {
@@ -38,27 +80,29 @@ const CardComponent = (props) => {
             onClick={() => handleDetailsProduct(id)}
         >
 
-            <img src={logo}
-                style={{ width: '68px', height: '14px', position: 'absolute', top: -1, left: 0, borderTopLeftRadius: '3px' }} />
-            <StyleNameProduct>{name}</StyleNameProduct>
+            {/* <img src={imageProduct}
+                style={{ width: '68px', height: '30px', position: 'absolute', top: -1, left: 0, borderTopLeftRadius: '3px' }} /> */}
+            <div style={{ marginBottom: '0px !important', display: 'block' }}>
+                <StyleNameProduct>{name}</StyleNameProduct>
 
-            <WrapperReporText>
-                <span style={{ marginRight: '4px' }}>
-                    {/* <span>{rating}</span> <StarFilled style={{ fontSize: '12px', color: 'yellow' }} /> */}
-                    {renderRating(rating)}
-                </span>
+                <WrapperReporText>
+                    <span style={{ marginRight: '4px' }}>
+                        {/* <span>{rating}</span> <StarFilled style={{ fontSize: '12px', color: 'yellow' }} /> */}
+                        {renderRating(rating)}
+                    </span>
 
-                <WrapperStyleTextSell>| Da ban {selled || 1000}</WrapperStyleTextSell>
+                    <WrapperStyleTextSell>| Da ban {a}</WrapperStyleTextSell>
 
 
-            </WrapperReporText>
-            <WrapperPriceText>
-                <span style={{ marginRight: '8px' }}>{convertPrice(price)}</span>
-                {/* <WrapperDiscountText>
-                    - {discount || 5} %
-                </WrapperDiscountText> */}
+                </WrapperReporText>
+                <WrapperPriceText>
+                    <span style={{ marginRight: '8px' }}>{convertPrice(price)}</span>
+                    {/* <WrapperDiscountText>
+        - {discount || 5} %
+    </WrapperDiscountText> */}
 
-            </WrapperPriceText>
+                </WrapperPriceText>
+            </div>
         </WrapperCardStyle>
     )
 }

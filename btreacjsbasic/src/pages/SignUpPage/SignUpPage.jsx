@@ -45,10 +45,10 @@ const SignUppage = () => {
     const { data, isLoading, isSuccess, isError } = mutation
     useEffect(() => {
         if (isSuccess) {
-            message.success()
+            message.success('Đăng ký thành công')
             handleNavigateSignin()
         } else if (isError) {
-            message.error()
+            message.error('Tài khoản đã tồn tại vui lòng chọn tài khoản khác')
         }
 
     }, [isSuccess, isError])
@@ -67,8 +67,8 @@ const SignUppage = () => {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.53)', height: '100vh' }}>
             <div style={{ width: '920px', height: '445px', borderRadius: '6px', background: '#fff', display: 'flex' }}>
                 <WrapprerContainerLeft>
-                    <h1>Xin chao</h1>
-                    <p>Dang nhap vao tai khoan</p>
+                    <h1>Xin chào</h1>
+                    <p>Nhập thông tin tài khoản</p>
                     <InputForm style={{ marginBottom: '10px' }} placeholder="abc@gmail.com" value={email} onChange={handleOnchangeEmail} />
 
 
@@ -148,12 +148,12 @@ const SignUppage = () => {
                         {/* </Pending> */}
                     </div>
 
-                    <p>Ban da co tai khoan ?<WrapperTextLight onClick={handleNavigateSignin} >Đăng Nhập</WrapperTextLight></p>
+                    <p>Bạn đã có tài khoản ?<WrapperTextLight onClick={handleNavigateSignin} >Đăng Nhập</WrapperTextLight></p>
                 </WrapprerContainerLeft>
 
                 <WrapprerContainerRight>
                     <Image src={imageLogo} preview={false} alt="image-logo" height="400px" width="300px" />
-                    <h4 style={{ textAlign: 'center' }}>Mua sam tai HUYPHAM</h4>
+                    <h4 style={{ textAlign: 'center' }}>Mua sắm tại HUYPHAM</h4>
                 </WrapprerContainerRight>
             </div>
         </div>

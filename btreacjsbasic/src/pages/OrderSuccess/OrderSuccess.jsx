@@ -62,9 +62,9 @@ const OrderSuccess = () => {
 
 
     if (state?.deliveryMethod === 'FAST') {
-        a = 10;
+        a = 40000;
     } else {
-        a = 15;
+        a = 30000;
     }
     const [localQuantities, setLocalQuantities] = useState({})
 
@@ -98,7 +98,7 @@ const OrderSuccess = () => {
                     <img
                         src={item.image}
                         alt={item.name}
-                        style={{ marginRight: 10 }}
+                        style={{ marginRight: 10, width: '100px' }}
                     />
                     <span>{item.name}</span>
                 </div>
@@ -162,9 +162,9 @@ const OrderSuccess = () => {
 
                     <div>
                         <Title level={5}>Phí thanh toán</Title>
-                        <h2><span style={{ color: '#FF9933' }}>Tổng tiền sản phẩm </span> {calculateTotal()} VND</h2>
+                        <h2><span style={{ color: '#FF9933' }}>Tổng tiền sản phẩm </span> {Number(calculateTotal())} VND</h2>
                         <h2><span style={{ color: '#FF9933' }}>Phí vận chuyển </span> {a} VND</h2>
-                        <h2><span style={{ color: '#FF9933' }}>Tổng tiền cần thanh toán </span> {calculateTotal() + a} VND</h2>
+                        <h2><span style={{ color: '#FF9933' }}>Tổng tiền cần thanh toán </span> {Number(calculateTotal()) + Number(a)} VND</h2>
 
                     </div>
                     <div>

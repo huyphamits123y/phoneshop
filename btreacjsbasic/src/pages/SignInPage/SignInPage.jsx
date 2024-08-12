@@ -122,8 +122,8 @@ const SignInpage = () => {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.53)', height: '100vh' }}>
             <div style={{ width: '920px', height: '445px', borderRadius: '6px', background: '#fff', display: 'flex' }}>
                 <WrapprerContainerLeft>
-                    <h1>Xin chao</h1>
-                    <p>Dang nhap vao tai khoan</p>
+                    <h1>Xin chào</h1>
+                    <p>Đăng nhập vào tài khoản</p>
 
                     <InputForm style={{ marginBottom: '10px' }} placeholder="abc@gmail.com" value={email} onChange={handleOnchangeEmail} />
                     <div style={{ position: 'relative' }}>
@@ -170,18 +170,18 @@ const SignInpage = () => {
                                 borderRadius: '4px',
                                 margin: '26px 0 10px'
                             }}
-                            textButton={'Dang Nhap'}
+                            textButton={'Đăng nhập'}
                             styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
                         ></ButtonComponent>
                         {/* </Pending> */}
                     </div>
-                    <p><WrapperTextLight>Quen mat khau</WrapperTextLight></p>
-                    <p>Chua co tai khoan ?<WrapperTextLight onClick={handleNavigateSignUp} style={{ cursor: 'pointer' }}>Tao tai khoan</WrapperTextLight></p>
+                    <p><WrapperTextLight>Quên mật khẩu</WrapperTextLight></p>
+                    <p>Chưa có tài khoản ?<WrapperTextLight onClick={handleNavigateSignUp} style={{ cursor: 'pointer' }}>Tạo tài khoản</WrapperTextLight></p>
                 </WrapprerContainerLeft>
 
                 <WrapprerContainerRight>
                     <Image src={imageLogo} preview={false} alt="image-logo" height="400px" width="300px" />
-                    <h4 style={{ textAlign: 'center' }}>Mua sam tai HUYPHAM</h4>
+                    <h4 style={{ textAlign: 'center' }}>Mua sắm tại HUYPHAM</h4>
                 </WrapprerContainerRight>
             </div>
 
