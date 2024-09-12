@@ -81,6 +81,33 @@ const listOrder = (user) => {
         }
     })
 }
+const listOrderAll = () => {
+
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            const listsOrder = await Order.find();
+
+
+
+
+            resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+                data: listsOrder,
+            })
+
+
+
+
+
+
+        } catch (e) {
+            reject(e)
+            console.log('not success')
+        }
+    })
+}
 const deleteOrder = (id) => {
 
     return new Promise(async (resolve, reject) => {
@@ -202,7 +229,7 @@ const paymentOrder = async (id) => {
                     amount: 1000000,
                     description: `Lazada - Payment for the order #${transID}`,
                     bank_code: "",
-                    callback_url: "https://e71f-2001-ee0-5531-50f0-bcfd-63e3-9dd8-41fa.ngrok-free.app/callback"
+                    callback_url: "https://3ef7-2001-ee0-5534-d7f0-91ab-fcf7-4522-8ba7.ngrok-free.app/callback"
                 };
 
                 // Generate MAC (Message Authentication Code)
@@ -655,7 +682,8 @@ module.exports = {
     sendEmailCreateOrder,
     paycallback,
     getAllOrder,
-    updateisPaid
+    updateisPaid,
+    listOrderAll
 
 
 }

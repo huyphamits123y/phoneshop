@@ -98,7 +98,7 @@ app.post("/payment", async (req, res) => {
         amount: 1899000,
         description: `Thanh toán MacBook Air 13 inch M1 #${transID}`,
         bank_code: "",
-        callback_url: "https://ee1a-2001-ee0-553e-f6f0-2165-d691-acca-13b2.ngrok-free.app/callback"
+        callback_url: "https://3ef7-2001-ee0-5534-d7f0-91ab-fcf7-4522-8ba7.ngrok-free.app/callback"
     };
 
     // appid|app_trans_id|appuser|amount|apptime|embeddata|item
@@ -161,7 +161,7 @@ app.post("/callback", async (req, res) => {
                     console.log('email')
                     const userfirstMatch = datauser[0];
                     console.log('email', userfirstMatch?.email)
-                    const dataemail = OrderService.sendEmailCreateOrder(userfirstMatch?.email, firstMatch?.id)
+                    const dataemail = await OrderService.sendEmailCreateOrder(userfirstMatch?.email, firstMatch?.id)
                     if (dataemail) {
                         console.log("gui mail thanh cong")
                     }

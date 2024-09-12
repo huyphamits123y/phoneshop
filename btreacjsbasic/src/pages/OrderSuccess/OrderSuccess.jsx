@@ -76,6 +76,8 @@ const OrderSuccess = () => {
         {
             title: 'Đơn giá',
             dataIndex: 'price',
+            render: (price) => `${price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`
+
         },
         {
             title: 'Số lượng',
@@ -85,7 +87,7 @@ const OrderSuccess = () => {
         {
             title: 'Thành tiền',
             dataIndex: 'total',
-            render: (text, record) => <span>{(record.price * record.quantity).toFixed(2)}</span>,
+            render: (text, record) => `${(record.price * record.quantity).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`
         },
 
     ];
@@ -162,9 +164,9 @@ const OrderSuccess = () => {
 
                     <div>
                         <Title level={5}>Phí thanh toán</Title>
-                        <h2><span style={{ color: '#FF9933' }}>Tổng tiền sản phẩm </span> {Number(calculateTotal())} VND</h2>
-                        <h2><span style={{ color: '#FF9933' }}>Phí vận chuyển </span> {a} VND</h2>
-                        <h2><span style={{ color: '#FF9933' }}>Tổng tiền cần thanh toán </span> {Number(calculateTotal()) + Number(a)} VND</h2>
+                        <h2><span style={{ color: '#FF9933' }}>Tổng tiền sản phẩm </span> {Number(calculateTotal()).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</h2>
+                        <h2><span style={{ color: '#FF9933' }}>Phí vận chuyển </span> {a.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</h2>
+                        <h2><span style={{ color: '#FF9933' }}>Tổng tiền cần thanh toán </span> {Number(calculateTotal()).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</h2>
 
                     </div>
                     <div>

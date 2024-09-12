@@ -237,6 +237,7 @@ const PaymentOrderPage = () => {
         {
             title: 'Đơn giá',
             dataIndex: 'price',
+            render: (price) => `${price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`
         },
         {
             title: 'Số lượng',
@@ -245,7 +246,7 @@ const PaymentOrderPage = () => {
         {
             title: 'Thành tiền',
             dataIndex: 'total',
-            render: (text, record) => <span>{(record.price * record.quantity).toFixed(2)}</span>,
+            render: (text, record) => `${(record.price * record.quantity).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`
         },
     ];
 

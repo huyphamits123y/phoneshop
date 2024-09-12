@@ -292,7 +292,7 @@ const PaymentPage = () => {
                         </Row>
                         <Row justify="space-between" style={{ marginBottom: 10 }}>
                             <Col>Tạm tính</Col>
-                            <Col>{Number(calculateTotal())}</Col>
+                            <Col>{Number(calculateTotal()).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</Col>
                         </Row>
                         {/* <Row justify="space-between" style={{ marginBottom: 10 }}>
                             <Col>Giảm giá</Col>
@@ -304,11 +304,11 @@ const PaymentPage = () => {
                         </Row> */}
                         <Row justify="space-between" style={{ marginBottom: 10 }}>
                             <Col>Phí giao hàng</Col>
-                            <Col>{a} VND</Col>
+                            <Col>{a.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</Col>
                         </Row>
                         <Row justify="space-between" style={{ marginBottom: 10, fontWeight: 'bold' }}>
                             <Col>Tổng tiền</Col>
-                            <Col>{Number(calculateTotal()) + a} VND</Col>
+                            <Col>{Number(calculateTotal()).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</Col>
 
                         </Row>
                         {/* <Button type="primary" style={{ width: '100%' }}>

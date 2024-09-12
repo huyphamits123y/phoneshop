@@ -119,6 +119,7 @@ const OrderPage = () => {
         {
             title: 'Đơn giá',
             dataIndex: 'price',
+            render: (price) => `${price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`
         },
         {
             title: 'Số lượng',
@@ -138,8 +139,13 @@ const OrderPage = () => {
         {
             title: 'Thành tiền',
             dataIndex: 'total',
-            render: (text, record) => <span>{(record.price * record.quantity).toFixed(2)}</span>,
+            render: (text, record) => `${(record.price * record.quantity).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`
+            // render: (text, record) => <span>{(record.price * record.quantity).toFixed(2)}</span>,
         },
+        // title: 'Total Price',
+        // dataIndex: 'totalPrice',
+        // render: (price) => `${price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`,
+        // sorter: (a, b) => a.totalPrice - b.totalPrice
         {
             title: '',
             dataIndex: 'action',
@@ -226,12 +232,13 @@ const OrderPage = () => {
                         </Row>
                         <Row justify="space-between" style={{ marginBottom: 10 }}>
                             <Col>Tạm tính</Col>
-                            <Col>{Number(calculateTotal())}</Col>
+
+                            <Col>{Number(calculateTotal()).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</Col>
                         </Row>
 
                         <Row justify="space-between" style={{ marginBottom: 10, fontWeight: 'bold' }}>
                             <Col>Tổng tiền sản phẩm</Col>
-                            <Col>{Number(calculateTotal())} VND</Col>
+                            <Col>{Number(calculateTotal()).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</Col>
                         </Row>
                         <ButtonComponent
                             onClick={() => handleAddCard()}

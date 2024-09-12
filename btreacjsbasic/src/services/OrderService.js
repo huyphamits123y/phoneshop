@@ -29,6 +29,16 @@ export const getListsOrder = async (id) => {
         throw error;
     }
 };
+export const getListsOrderAll = async () => {
+
+    try {
+        const res = await axiosJWT.get('/api/order/payment-order-all')
+        return res.data;
+    } catch (error) {
+        console.error("Error fetching order:", error);
+        throw error;
+    }
+};
 export const deleteOrder = async (id, access_token) => {
     const res = await axiosJWT.delete(`/api/order/delete-order/${id}`, {
         headers: {
@@ -66,3 +76,12 @@ export const getAllOrder = async () => {
         throw error;
     }
 };
+// export const getAllOrder = async (access_token) => {
+//     const res = await axiosJWT.get('/api/order/get-all-order', {
+//         headers: {
+//             token: `Bearer ${access_token}`,
+
+//         }
+//     })
+//     return res.data
+// };

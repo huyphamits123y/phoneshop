@@ -46,6 +46,21 @@ const listsOrder = async (req, res) => {
     // return res.send("data success");
 
 }
+const listsOrderAll = async (req, res) => {
+    try {
+
+        const response = await OrderService.listOrderAll()
+        return res.status(200).json(response)
+
+    } catch (e) {
+        return res.status(404).json({
+            message: e
+        })
+    }
+    // console.log(req.body);
+    // return res.send("data success");
+
+}
 const deleteOrder = async (req, res) => {
     try {
         const orderId = req.params.id;
@@ -168,6 +183,7 @@ module.exports = {
     sendEmailOrder,
     callbackOrder,
     getAllOrder,
+    listsOrderAll
 
 
 }

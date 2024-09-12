@@ -1,4 +1,4 @@
-import { React, useRef } from "react";
+import { React, useEffect, useRef } from "react";
 import { Row, Col, Image, InputNumber, Rate } from 'antd'
 import { StarFilled, PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import imageProduct from '../../assets/images/image1.png';
@@ -11,9 +11,11 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import { addOrderProduct } from '../../redux/slides/orderSlide'
 import * as OrderService from '../../services/OrderService'
-import { convertPrice } from "../../utils";
+import { convertPrice, initFacebookSDK } from "../../utils";
 import ReactDOM from 'react-dom';
 import { isDraft } from 'immer';
+import LikeButtonComponent from "../LikeButtonComponent/LikeButtonComponent";
+import CommentComponent from "../CommentComponent/CommentComponent";
 const ProductDetailsComponent = () => {
     const [numProduct, setNumProduct] = useState(1)
     const user = useSelector((state) => state.user)
@@ -35,6 +37,10 @@ const ProductDetailsComponent = () => {
 
 
     }
+    useEffect(() => {
+        initFacebookSDK()
+
+    }, [])
     const fetchGetAllOrder = () => {
         return OrderService.getAllOrder()
     };
@@ -156,6 +162,8 @@ const ProductDetailsComponent = () => {
                     <span className='address'>{user?.address}</span>
 
                 </WrapperAddressProduct>
+                <LikeButtonComponent dataHref="https://developers.facebook.com/docs/plugins/" />
+
                 <div style={{ margin: '10px 0 20px', borderTop: '1px solid #e5e5e5', borderBottom: '1px solid #e5e5e5', padding: '10px 0' }}>
                     <div style={{ marginBottom: '10px' }}>
                         Số lượng
@@ -212,6 +220,7 @@ const ProductDetailsComponent = () => {
 
 
             </Col>
+            <CommentComponent dataHref="https://developers.facebook.com/docs/plugins/comments#configurator" width="1270" />
         </Row>
     )
 }

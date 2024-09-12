@@ -75,8 +75,8 @@ const SignInpage = () => {
                 console.log('decoded', decoded)
                 if (decoded?.id) {
                     handleGetDetailsUser(decoded?.id, data?.access_token);
-                    console.log(decoded?.id);
-                    console.log(decoded?.access_token)
+                    console.log('decoded id', decoded?.id);
+                    console.log('decoded token', decoded?.access_token)
 
 
                 }

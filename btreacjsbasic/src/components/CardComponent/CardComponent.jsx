@@ -28,12 +28,7 @@ const CardComponent = (props) => {
 
 
     const { isLoading: isLoadingOrder, data: allOrders } = queryOrder;
-    // const data = allOrders?.data?.flatMap(order => order.orderItems).filter(item => item.name === name);
-    // const dataorder = allOrders?.data
-    //     ?.filter(order => order?.isPaid) // Filter orders by isPaid
-    //     .filter(order => order?.orderItems.some(item => item.name === name)); // Check if any orderItem has the specified name
-
-    // console.log('data', dataorder?.orderItems?.name, ' so luong ', dataorder?.amount)
+   
 
     let a = 0
     const dataorder = allOrders?.data
@@ -49,7 +44,7 @@ const CardComponent = (props) => {
 
             });
     });
-    console.log('tong san pham', name, ' : ', a)
+
 
 
 
